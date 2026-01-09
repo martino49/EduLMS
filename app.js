@@ -75,20 +75,24 @@ const isVercel = process.env.VERCEL === '1' || !!process.env.VERCEL;
 let accessLogStream, errorLogStream;
 
 if (!isVercel) {
-  const logDir = path.join(__dirname, 'storage/logs');
-  if (!fs.existsSync(logDir)) {
-    fs.mkdirSync(logDir, { recursive: true });
+  try {
+    const logDir = path.join(__dirname, 'storage/logs');
+    if (!fs.existsSync(logDir)) {
+      fs.mkdirSync(logDir, { recursive: true });
+    }
+
+    accessLogStream = fs.createWriteStream(
+      path.join(__dirname, 'storage/logs/access.log'),
+      { flags: 'a' }
+    );
+
+    errorLogStream = fs.createWriteStream(
+      path.join(__dirname, 'storage/logs/error.log'),
+      { flags: 'a' }
+    );
+  } catch (error) {
+    console.warn('⚠️ Logging setup failed (likely read-only filesystem):', error.message);
   }
-
-  accessLogStream = fs.createWriteStream(
-    path.join(__dirname, 'storage/logs/access.log'),
-    { flags: 'a' }
-  );
-
-  errorLogStream = fs.createWriteStream(
-    path.join(__dirname, 'storage/logs/error.log'),
-    { flags: 'a' }
-  );
 }
 
 // Logging setup
