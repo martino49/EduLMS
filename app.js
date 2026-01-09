@@ -286,32 +286,29 @@ const safeRequireRoute = (routePath, routeName) => {
   }
 };
 
-// Routes with safe loading
-console.log('🔍 Loading routes...');
-
 // Public routes
-app.use('/', safeRequireRoute('./app/routes/index', 'Index'));
-app.use('/auth', safeRequireRoute('./app/routes/auth', 'Auth'));
+app.use('/', require('./app/routes/index'));
+app.use('/auth', require('./app/routes/auth'));
 
 // Protected routes with role-based access
-app.use('/admin', ensureAuthenticated, requireRole(['admin']), safeRequireRoute('./app/routes/admin', 'Admin'));
-app.use('/student', ensureAuthenticated, requireRole(['student']), safeRequireRoute('./app/routes/student', 'Student'));
-app.use('/instructor', ensureAuthenticated, requireRole(['instructor']), safeRequireRoute('./app/routes/instructor', 'Instructor'));
-app.use('/finance', ensureAuthenticated, requireRole(['finance']), safeRequireRoute('./app/routes/finance', 'Finance'));
+app.use('/admin', ensureAuthenticated, requireRole(['admin']), require('./app/routes/admin'));
+app.use('/student', ensureAuthenticated, requireRole(['student']), require('./app/routes/student'));
+app.use('/instructor', ensureAuthenticated, requireRole(['instructor']), require('./app/routes/instructor'));
+app.use('/finance', ensureAuthenticated, requireRole(['finance']), require('./app/routes/finance'));
 
 // Academic routes
-app.use('/courses', ensureAuthenticated, safeRequireRoute('./app/routes/courses', 'Courses'));
-app.use('/assignments', ensureAuthenticated, safeRequireRoute('./app/routes/assignments', 'Assignments'));
-app.use('/submissions', ensureAuthenticated, safeRequireRoute('./app/routes/submissions', 'Submissions'));
-app.use('/grades', ensureAuthenticated, safeRequireRoute('./app/routes/grades', 'Grades'));
-app.use('/enrollments', ensureAuthenticated, safeRequireRoute('./app/routes/enrollments', 'Enrollments'));
+app.use('/courses', ensureAuthenticated, require('./app/routes/courses'));
+app.use('/assignments', ensureAuthenticated, require('./app/routes/assignments'));
+app.use('/submissions', ensureAuthenticated, require('./app/routes/submissions'));
+app.use('/grades', ensureAuthenticated, require('./app/routes/grades'));
+app.use('/enrollments', ensureAuthenticated, require('./app/routes/enrollments'));
 
 // Finance routes
-app.use('/payments', ensureAuthenticated, safeRequireRoute('./app/routes/payments', 'Payments'));
+app.use('/payments', ensureAuthenticated, require('./app/routes/payments'));
 
 // System routes
-app.use('/notifications', ensureAuthenticated, safeRequireRoute('./app/routes/notifications', 'Notifications'));
-app.use('/system', ensureAuthenticated, requireRole(['admin']), safeRequireRoute('./app/routes/system', 'System'));
+app.use('/notifications', ensureAuthenticated, require('./app/routes/notifications'));
+app.use('/system', ensureAuthenticated, requireRole(['admin']), require('./app/routes/system'));
 
 // Error handling middleware
 app.use(errorHandler);
