@@ -1,0 +1,254 @@
+/* ==================================
+   Human-Centric Design System v1.0
+   ================================== */
+
+:root {
+    /* --- Palette: Organic & Trustworthy --- */
+    --primary-hue: 220; /* Deep Ocean Blue */
+    --primary: hsl(var(--primary-hue), 85%, 55%);
+    --primary-dark: hsl(var(--primary-hue), 85%, 45%);
+    --primary-light: hsl(var(--primary-hue), 90%, 96%);
+    
+    --secondary-hue: 150; /* Growth Green */
+    --secondary: hsl(var(--secondary-hue), 60%, 50%);
+    --secondary-light: hsl(var(--secondary-hue), 70%, 95%);
+
+    --accent-hue: 25; /* Warm Orange for energy */
+    --accent: hsl(var(--accent-hue), 90%, 60%);
+
+    --surface-1: #ffffff;
+    --surface-2: #f8fafc;
+    --surface-3: #f1f5f9;
+
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+
+    /* --- Geometry: Soft & Friendly --- */
+    --radius-sm: 0.5rem;   /* 8px */
+    --radius-md: 1rem;     /* 16px */
+    --radius-lg: 1.5rem;   /* 24px */
+    --radius-pill: 50rem;
+
+    /* --- Depth: Soft Shadows --- */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+    --shadow-float: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+
+    /* --- Transitions --- */
+    --ease-squish: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Base Softness */
+body {
+    background-color: var(--surface-2);
+    color: var(--text-main);
+    line-height: 1.6;
+}
+
+a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--primary-dark);
+}
+
+/* User Interface Cards - "The Paper Effect" */
+.card {
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--surface-1);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s var(--ease-squish), box-shadow 0.3s var(--ease-squish);
+    overflow: hidden;
+}
+
+.card:hover {
+    /* Subtle lift effect */
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.card-header {
+    background: transparent;
+    border-bottom: 1px solid var(--surface-3);
+    padding: 1.5rem;
+    font-weight: 600;
+    font-family: 'Outfit', sans-serif;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Interactive Elements */
+.btn {
+    border-radius: var(--radius-sm);
+    padding: 0.6rem 1.25rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    transition: all 0.2s var(--ease-squish);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary {
+    background: var(--primary);
+    border: none;
+    box-shadow: 0 4px 6px rgba(50, 100, 255, 0.2);
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 8px rgba(50, 100, 255, 0.3);
+}
+
+.btn-outline-primary {
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    background: transparent;
+}
+
+.btn-outline-primary:hover {
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+/* Rounded Buttons (Pills) for actions */
+.btn-pill, .rounded-pill {
+    border-radius: var(--radius-pill);
+}
+
+/* Form Controls - Friendly Inputs */
+.form-control, .form-select {
+    border: 2px solid var(--surface-3);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1rem;
+    background-color: var(--surface-2);
+    transition: all 0.2s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: var(--surface-1);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--primary-light);
+}
+
+/* Navigation & Sidebar Softening */
+.sidebar, .dashboard-sidebar {
+    background: var(--surface-1);
+    border-right: 1px solid var(--surface-3);
+    box-shadow: var(--shadow-sm);
+}
+
+.nav-link {
+    border-radius: var(--radius-sm);
+    margin: 0.25rem 0.5rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    background-color: var(--surface-2);
+    color: var(--primary);
+}
+
+.nav-link.active {
+    background-color: var(--primary-light);
+    color: var(--primary);
+}
+
+/* Data Tables - Clean & Readable */
+.table {
+    margin-bottom: 0;
+}
+
+.table thead th {
+    background-color: var(--surface-2);
+    border-bottom: none;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    padding: 1rem 1.5rem;
+}
+
+.table tbody td {
+    padding: 1rem 1.5rem;
+    vertical-align: middle;
+    color: var(--text-main);
+    border-bottom: 1px solid var(--surface-3);
+}
+
+/* Status Badges */
+.badge {
+    padding: 0.5em 0.8em;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    letter-spacing: 0.02em;
+}
+
+.bg-success-soft {
+    background-color: hsl(var(--secondary-hue), 80%, 90%);
+    color: hsl(var(--secondary-hue), 40%, 30%);
+}
+
+.bg-primary-soft {
+    background-color: var(--primary-light);
+    color: var(--primary-dark);
+}
+
+.bg-warning-soft {
+    background-color: #fff7ed;
+    color: #9a3412;
+}
+
+/* Utility Animations */
+.hover-lift {
+    transition: transform 0.2s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-3px);
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Human Touches */
+.avatar-circle {
+    border-radius: 50%;
+    border: 3px solid var(--surface-1);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
