@@ -14,6 +14,21 @@ const MySQLStore = require('express-mysql-session')(session);
 
 const app = express();
 
+const isProduction = process.env.NODE_ENV === 'production';
+const isDevelopment = process.env.NODE_ENV === 'development';
+
+// Log environment status safely
+console.log(`🌐 Application Mode: ${process.env.NODE_ENV || 'undefined'}`);
+if (isProduction) {
+  const essentialEnvs = ['DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASSWORD', 'SESSION_SECRET'];
+  const missing = essentialEnvs.filter(env => !process.env[env] && !process.env.DATABASE_URL);
+  if (missing.length > 0) {
+    console.warn(`⚠️  Missing essential production environment variables: ${missing.join(', ')}`);
+  } else {
+    console.log('✅ All essential environment variables are present');
+  }
+}
+
 // Import database configuration
 const { pool, checkDatabaseHealth, gracefulShutdown } = require('./config/database');
 
@@ -221,8 +236,12 @@ const testDatabaseConnection = async () => {
     console.log('📊 Database health:', health.healthy ? 'Healthy' : 'Unhealthy');
 
   } catch (err) {
-    console.error('❌ Database connection failed: ' + err.stack);
-    process.exit(1);
+    console.error('❌ Database connection failed: ' + err.message);
+    if (!isProduction) {
+      process.exit(1);
+    } else {
+      console.error('⚠️ Continuing in production mode despite DB failure. Requests will fail until DB is available.');
+    }
   }
 };
 

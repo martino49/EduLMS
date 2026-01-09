@@ -1,5 +1,8 @@
 // Global error handling middleware
 const errorHandler = (err, req, res, next) => {
+  if (res.headersSent) {
+    return next(err);
+  }
   console.error('Error occurred:', err);
 
   // Set default error message and status code

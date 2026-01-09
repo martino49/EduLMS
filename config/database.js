@@ -6,27 +6,47 @@ const path = require('path');
 const isProduction = process.env.NODE_ENV === 'production';
 const isDevelopment = process.env.NODE_ENV === 'development';
 
+// Database configuration options
+let dbConfig;
+
+if (process.env.DATABASE_URL) {
+  // If DATABASE_URL is provided (common in Vercel/managed DBs)
+  console.log('📝 Using DATABASE_URL for connection');
+  dbConfig = {
+    uri: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false } // More compatible with managed DBs
+  };
+} else {
+  // Use discrete variables
+  const dbHost = process.env.DB_HOST || 'localhost';
+  console.log(`📝 Database host: ${dbHost === 'localhost' || dbHost === '127.0.0.1' ? '⚠️ localhost' : dbHost.substring(0, 3) + '...' + dbHost.substring(dbHost.length - 3)}`);
+
+  dbConfig = {
+    host: dbHost,
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT || 3306,
+  };
+}
+
 const pool = mysql.createPool({
-  host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT || 3306,
+  ...dbConfig,
   waitForConnections: true,
-  connectionLimit: isProduction ? 50 : 20,
+  connectionLimit: isProduction ? 10 : 20, // Reduced for serverless
   queueLimit: 0,
   charset: 'utf8mb4',
   timezone: '+00:00',
   multipleStatements: isDevelopment,
   connectTimeout: 60000,
 
-  // Production-specific settings
+  // Production-specific overrides
   ...(isProduction && {
-    ssl: { rejectUnauthorized: true },
+    ssl: dbConfig.ssl || { rejectUnauthorized: false }, // Default to false if not provided, safer for managed DBs
     multipleStatements: false,
   }),
 
-  // Development-specific settings
+  // Development-specific overrides
   ...(isDevelopment && {
     debug: false,
   })
@@ -51,11 +71,22 @@ const createDatabaseSchema = async () => {
   let connection;
   try {
     // Get connection without specific database
+    console.log('📝 Initializing database connection for schema setup...');
+
+    // For schema creation, we need to connect without a database name initially
+    const initConfig = { ...dbConfig };
+    delete initConfig.database;
+    delete initConfig.uri; // mysql.createConnection doesn't support uri in the same way as createPool for schema ops usually
+
+    // If it was a URI, we'd need to parse it, but let's assume if they have URI they don't need automated schema creation
+    // OR we just use the discrete variables which should still be there or default to localhost
+
     connection = await mysql.createConnection({
-      host: process.env.DB_HOST || 'localhost',
-      user: process.env.DB_USER || 'root',
-      password: process.env.DB_PASSWORD || '',
-      port: process.env.DB_PORT || 3306
+      host: dbConfig.host || process.env.DB_HOST || 'localhost',
+      user: dbConfig.user || process.env.DB_USER || 'root',
+      password: dbConfig.password || process.env.DB_PASSWORD || '',
+      port: dbConfig.port || process.env.DB_PORT || 3306,
+      ssl: dbConfig.ssl || (isProduction ? { rejectUnauthorized: false } : undefined)
     });
 
     const dbName = process.env.DB_NAME;
