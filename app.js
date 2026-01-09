@@ -388,7 +388,9 @@ const startServer = async (port) => {
   }
 };
 
-// Start the server
-startServer(PORT);
+// Start the server only if run directly (local development)
+if (require.main === module) {
+  startServer(PORT);
+}
 
 module.exports = app; 
