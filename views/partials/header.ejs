@@ -4,36 +4,68 @@
             <div class="header-brand">
                 <a href="/" class="text-decoration-none d-flex align-items-center gap-2">
                     <img src="/img/logo.png" alt="EduLMS" class="logo">
-                    <span class="brand-name">EduLMS</span>
+                    <span class="brand-name">
+                        <%= typeof app_name !=='undefined' ? app_name : 'EduLMS' %>
+                    </span>
                 </a>
             </div>
 
-            <nav class="header-nav">
-                <div class="nav-items">
+            <nav class="header-nav d-none d-md-block">
+                <ul class="nav-links list-unstyled d-flex align-items-center mb-0">
+                    <% if (currentUser) { %>
+                        <li class="nav-item">
+                            <a href="/dashboard" class="nav-link <%= currentPath === '/dashboard' ? 'active' : '' %>">
+                                <i class="fas fa-th-large me-1"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/courses" class="nav-link <%= currentPath === '/courses' ? 'active' : '' %>">
+                                <i class="fas fa-book me-1"></i> My Courses
+                            </a>
+                        </li>
+                        <% } else { %>
+                            <li class="nav-item">
+                                <a href="/" class="nav-link <%= currentPath === '/' ? 'active' : '' %>">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/courses"
+                                    class="nav-link <%= currentPath === '/courses' ? 'active' : '' %>">Browse
+                                    Courses</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/about"
+                                    class="nav-link <%= currentPath === '/about' ? 'active' : '' %>">About</a>
+                            </li>
+                            <% } %>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <div class="nav-items d-flex align-items-center gap-3">
                     <% if (currentUser) { %>
                         <div class="user-menu">
                             <div class="user-info">
-                                <img src="<%= currentUser.avatar || '../../public/images/avatars/default.png' %>"
-                                    alt="<%= currentUser.name %>" class="user-avatar">
-                                <span class="user-name">
-                                    <%= currentUser.name %>
-                                </span>
-                                <span class="user-role badge badge-info">
-                                    <%= currentUser.role %>
-                                </span>
+                                <img src="<%= currentUser.profile_image || '/images/avatars/default.png' %>"
+                                    alt="<%= currentUser.name %>" class="user-avatar text-white">
+                                <div class="user-details d-none d-lg-block">
+                                    <span class="user-name">
+                                        <%= currentUser.name.split(' ')[0] %></span>
+                                    <span class="user-role fs-xs opacity-75"><%= currentUser.role_name %></span>
+                                </div>
+                                <i class="fas fa-chevron-down ms-1 fs-xs opacity-50"></i>
                             </div>
                             <div class="dropdown-menu">
                                 <a href="/profile" class="dropdown-item">Profile</a>
                                 <a href="/settings" class="dropdown-item">Settings</a>
                                 <div class="dropdown-divider"></div>
-                                <a href="/auth/logout" class="dropdown-item">Logout</a>
+                                <a href="/auth/logout" class="dropdown-item text-danger">Logout</a>
                             </div>
                         </div>
-                        <% } else { %>
-                            <a href="/auth/login" class="btn btn-secondary">Login</a>
-                            <a href="/auth/register" class="btn btn-primary">Register</a>
-                            <% } %>
+                    <% } else { %>
+                        <a href="/auth/login" class="btn btn-secondary">Login</a>
+                        <a href="/auth/register" class="btn btn-primary px-4">Get Started</a>
+                    <% } %>
                 </div>
+            </div>
             </nav>
         </div>
     </div>
@@ -53,7 +85,26 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        height: 64px;
+        height: 72px;
+    }
+
+    .nav-links {
+        gap: 1.5rem;
+    }
+
+    .nav-link {
+        color: var(--gray-600);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.95rem;
+        padding: 0.5rem 0;
+        transition: all 0.2s ease;
+        border-bottom: 2px solid transparent;
+    }
+
+    .nav-link:hover, .nav-link.active {
+        color: var(--primary-blue);
+        border-bottom-color: var(--primary-blue);
     }
 
     .header-brand {
@@ -63,14 +114,15 @@
     }
 
     .logo {
-        height: 32px;
+        height: 40px;
         width: auto;
     }
 
     .brand-name {
-        font-size: 1.25rem;
-        font-weight: 700;
+        font-size: 1.4rem;
+        font-weight: 800;
         color: var(--primary-blue);
+        letter-spacing: -0.5px;
     }
 
     .user-menu {
@@ -79,46 +131,63 @@
         align-items: center;
         gap: var(--spacing-md);
         cursor: pointer;
-        padding: var(--spacing-sm);
-        border-radius: var(--radius-md);
+        padding: 4px 8px;
+        border-radius: var(--radius-lg);
         transition: background-color 0.2s ease;
+        border: 1px solid transparent;
     }
 
     .user-menu:hover {
-        background-color: var(--gray-100);
+        background-color: var(--gray-50);
+        border-color: var(--gray-200);
     }
 
     .user-info {
         display: flex;
         align-items: center;
-        gap: var(--spacing-sm);
+        gap: 0.75rem;
     }
 
-    .user-avatar {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        object-fit: cover;
+    .user-details {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.2;
     }
 
     .user-name {
-        font-weight: 500;
-        color: var(--gray-700);
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--gray-900);
+    }
+
+    .user-role {
+        font-size: 0.75rem;
+        color: var(--gray-500);
+        text-transform: capitalize;
+    }
+
+    .user-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        object-fit: cover;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .dropdown-menu {
         position: absolute;
-        top: 100%;
+        top: calc(100% + 8px);
         right: 0;
         background: white;
         border: 1px solid var(--gray-200);
         border-radius: var(--radius-md);
-        box-shadow: var(--shadow-lg);
-        min-width: 200px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        min-width: 180px;
         opacity: 0;
         visibility: hidden;
-        transform: translateY(-10px);
-        transition: all 0.2s ease;
+        transform: translateY(10px);
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        padding: 0.5rem;
     }
 
     .user-menu:hover .dropdown-menu {
@@ -128,20 +197,27 @@
     }
 
     .dropdown-item {
-        display: block;
-        padding: var(--spacing-md) var(--spacing-lg);
+        display: flex;
+        align-items: center;
+        padding: 0.6rem 0.8rem;
         color: var(--gray-700);
         text-decoration: none;
-        transition: background-color 0.2s ease;
+        font-size: 0.9rem;
+        border-radius: var(--radius-sm);
+        transition: all 0.2s ease;
     }
 
     .dropdown-item:hover {
         background-color: var(--gray-50);
+        color: var(--primary-blue);
     }
 
     .dropdown-divider {
         height: 1px;
-        background-color: var(--gray-200);
-        margin: var(--spacing-xs) 0;
+        background-color: var(--gray-100);
+        margin: 0.4rem 0;
     }
+
+    .fs-xs { font-size: 0.75rem; }
+    .fw-500 { font-weight: 500; }
 </style>

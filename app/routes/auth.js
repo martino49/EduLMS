@@ -6,8 +6,8 @@ const passport = require('passport');
 let ensureAuthenticated, ensureGuest;
 try {
     const authMiddleware = require('../middleware/auth');
-    ensureAuthenticated = authMiddleware.ensureAuthenticated || ((req, res, next) => next());
-    ensureGuest = authMiddleware.ensureGuest || ((req, res, next) => next());
+    ensureAuthenticated = authMiddleware.isAuthenticated || ((req, res, next) => next());
+    ensureGuest = authMiddleware.isNotAuthenticated || ((req, res, next) => next());
 } catch (error) {
     console.error('❌ Error loading auth middleware:', error.message);
     ensureAuthenticated = (req, res, next) => next();
