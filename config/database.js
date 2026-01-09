@@ -8,16 +8,30 @@ const isDevelopment = process.env.NODE_ENV === 'development';
 
 // Database configuration options
 let dbConfig;
+let pool;
+
+const commonOptions = {
+  waitForConnections: true,
+  connectionLimit: isProduction ? 10 : 20,
+  queueLimit: 0,
+  charset: 'utf8mb4',
+  timezone: '+00:00',
+  multipleStatements: isDevelopment,
+  connectTimeout: 60000,
+  ...(isProduction && {
+    ssl: { rejectUnauthorized: false },
+    multipleStatements: false,
+  }),
+  ...(isDevelopment && {
+    debug: false,
+  })
+};
 
 if (process.env.DATABASE_URL) {
-  // If DATABASE_URL is provided (common in Vercel/managed DBs)
   console.log('📝 Using DATABASE_URL for connection');
-  dbConfig = {
-    uri: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false } // More compatible with managed DBs
-  };
+  pool = mysql.createPool(process.env.DATABASE_URL, commonOptions);
+  dbConfig = { ssl: { rejectUnauthorized: false } };
 } else {
-  // Use discrete variables
   const dbHost = process.env.DB_HOST || 'localhost';
   console.log(`📝 Database host: ${dbHost === 'localhost' || dbHost === '127.0.0.1' ? '⚠️ localhost' : dbHost.substring(0, 3) + '...' + dbHost.substring(dbHost.length - 3)}`);
 
@@ -28,29 +42,12 @@ if (process.env.DATABASE_URL) {
     database: process.env.DB_NAME,
     port: process.env.DB_PORT || 3306,
   };
+
+  pool = mysql.createPool({
+    ...dbConfig,
+    ...commonOptions
+  });
 }
-
-const pool = mysql.createPool({
-  ...dbConfig,
-  waitForConnections: true,
-  connectionLimit: isProduction ? 10 : 20, // Reduced for serverless
-  queueLimit: 0,
-  charset: 'utf8mb4',
-  timezone: '+00:00',
-  multipleStatements: isDevelopment,
-  connectTimeout: 60000,
-
-  // Production-specific overrides
-  ...(isProduction && {
-    ssl: dbConfig.ssl || { rejectUnauthorized: false }, // Default to false if not provided, safer for managed DBs
-    multipleStatements: false,
-  }),
-
-  // Development-specific overrides
-  ...(isDevelopment && {
-    debug: false,
-  })
-});
 
 // Handle pool errors
 pool.on('error', (err) => {

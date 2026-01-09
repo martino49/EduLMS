@@ -14,6 +14,9 @@ const MySQLStore = require('express-mysql-session')(session);
 
 const app = express();
 
+// Set trust proxy for Vercel/proxies (required for express-rate-limit)
+app.set('trust proxy', 1);
+
 const isProduction = process.env.NODE_ENV === 'production';
 const isDevelopment = process.env.NODE_ENV === 'development';
 

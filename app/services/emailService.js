@@ -11,6 +11,11 @@ class EmailService {
      */
     initializeTransporter() {
         try {
+            if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+                console.warn('⚠️ Email credentials missing. Email service will be disabled.');
+                return;
+            }
+
             this.transporter = nodemailer.createTransport({
                 service: process.env.EMAIL_SERVICE || 'gmail',
                 auth: {
@@ -141,7 +146,7 @@ class EmailService {
      */
     async sendWelcomeEmail(user, verificationLink = null) {
         const subject = `Welcome to ${process.env.SITE_NAME || 'EduLMS'}`;
-        
+
         const templateData = {
             name: `${user.firstName} ${user.lastName}`,
             email: user.email,
@@ -199,14 +204,14 @@ class EmailService {
 
             const result = await this.transporter.sendMail(mailOptions);
             console.log(`✅ Email sent to ${to}: ${result.messageId}`);
-            
+
             return {
                 success: true,
                 messageId: result.messageId
             };
         } catch (error) {
             console.error(`❌ Failed to send email to ${to}:`, error.message);
-            
+
             return {
                 success: false,
                 error: error.message
@@ -224,7 +229,7 @@ class EmailService {
             }
 
             await this.transporter.verify();
-            
+
             return {
                 success: true,
                 message: 'Email configuration is working correctly'
