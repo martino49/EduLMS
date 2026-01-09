@@ -1,22 +1,65 @@
+const { pool: db } = require('../../../config/database');
+const Instructor = require('../../models/Instructor');
 const { asyncHandler } = require('../../middleware/errorHandler');
 
 module.exports = {
   // Instructor Dashboard
   dashboard: asyncHandler(async (req, res) => {
     try {
-      // For now, return basic response until models are set up
-      res.json({ 
-        message: 'Instructor dashboard - Under construction',
-        user: req.user 
+      const instructorId = req.user.id;
+
+      const [profile, recentSubmissions, coursesForGrading] = await Promise.all([
+        Instructor.getProfile(instructorId),
+        db.query(`
+          SELECT s.*, u.name as student_name, a.title as assignment_title, c.title as course_title
+          FROM submissions s
+          JOIN users u ON s.student_id = u.id
+          JOIN assignments a ON s.assignment_id = a.id
+          JOIN courses c ON a.course_id = c.id
+          WHERE c.teacher_id = ?
+          ORDER BY s.submitted_at DESC
+          LIMIT 5
+        `, [instructorId]),
+        Instructor.getAssignmentsForGrading(instructorId, 1, 5)
+      ]);
+
+      res.render('instructor/dashboard', {
+        title: 'Instructor Dashboard - EduLMS',
+        layout: 'layouts/instructor-layout',
+        currentUser: req.user,
+        currentPage: 'dashboard',
+        profile,
+        recentSubmissions,
+        coursesForGrading: coursesForGrading.assignments || []
       });
     } catch (error) {
-      throw error;
+      console.error('Instructor dashboard error:', error);
+      req.flash('error_msg', 'Error loading dashboard');
+      res.redirect('/');
     }
   }),
 
   // Course Management
   listCourses: asyncHandler(async (req, res) => {
-    res.json({ message: 'List courses - Under construction' });
+    try {
+      const instructorId = req.user.id;
+      const page = parseInt(req.query.page) || 1;
+      const limit = 10;
+
+      const coursesData = await Instructor.getCourses(instructorId, req.query, page, limit);
+
+      res.render('instructor/courses/list', {
+        title: 'My Courses - EduLMS',
+        layout: 'layouts/instructor-layout',
+        currentUser: req.user,
+        currentPage: 'courses',
+        ...coursesData
+      });
+    } catch (error) {
+      console.error('List courses error:', error);
+      req.flash('error_msg', 'Error loading courses');
+      res.redirect('/instructor/dashboard');
+    }
   }),
 
   showCreateCourse: asyncHandler(async (req, res) => {
@@ -57,7 +100,33 @@ module.exports = {
 
   // Assignment Management
   listAssignments: asyncHandler(async (req, res) => {
-    res.json({ message: 'List assignments - Under construction' });
+    try {
+      const instructorId = req.user.id;
+      const page = parseInt(req.query.page) || 1;
+      const limit = 10;
+
+      const assignmentsData = await db.query(`
+        SELECT a.*, c.title as course_title, c.course_code
+        FROM assignments a
+        JOIN courses c ON a.course_id = c.id
+        WHERE c.teacher_id = ?
+        ORDER BY a.created_at DESC
+        LIMIT ? OFFSET ?
+      `, [instructorId, limit, (page - 1) * limit]);
+
+      res.render('instructor/assignments/list', {
+        title: 'Assignments - EduLMS',
+        layout: 'layouts/instructor-layout',
+        currentUser: req.user,
+        currentPage: 'assignments',
+        assignments: assignmentsData,
+        pagination: { current: page, totalPages: 1 } // Simplified for now
+      });
+    } catch (error) {
+      console.error('List assignments error:', error);
+      req.flash('error_msg', 'Error loading assignments');
+      res.redirect('/instructor/dashboard');
+    }
   }),
 
   showCreateAssignment: asyncHandler(async (req, res) => {

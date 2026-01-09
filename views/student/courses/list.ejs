@@ -1,0 +1,101 @@
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h4 class="fw-bold mb-1">My Courses</h4>
+                <p class="text-muted mb-0">Manage your enrolled courses and learning progress</p>
+            </div>
+            <div class="d-flex gap-2">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
+                    <input type="text" class="form-control border-start-0 ps-0" placeholder="Search courses...">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <% if (locals.courses && courses.length> 0) { %>
+        <% courses.forEach(function(course) { %>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift transition-all">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2">
+                                <%= course.course_code %>
+                            </span>
+                            <div class="dropdown">
+                                <button class="btn btn-link text-muted p-0" data-bs-toggle="dropdown">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm rounded-3">
+                                    <li><a class="dropdown-item" href="/student/courses/<%= course.id %>"><i
+                                                class="fas fa-eye me-2 text-primary"></i>View Course</a></li>
+                                    <li><a class="dropdown-item" href="/student/courses/<%= course.id %>/materials"><i
+                                                class="fas fa-file-alt me-2 text-info"></i>Materials</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <h5 class="card-title fw-bold mb-2">
+                            <a href="/student/courses/<%= course.id %>"
+                                class="text-dark text-decoration-none stretched-link">
+                                <%= course.title %>
+                            </a>
+                        </h5>
+
+                        <p class="text-muted small mb-4 line-clamp-2">
+                            <%= course.description || 'No description available for this course.' %>
+                        </p>
+
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="avatar-xs bg-light rounded-circle d-flex align-items-center justify-content-center me-2"
+                                style="width: 32px; height: 32px;">
+                                <i class="fas fa-chalkboard-teacher text-muted"></i>
+                            </div>
+                            <div>
+                                <div class="small fw-bold">
+                                    <%= course.teacher_name || 'Instructor' %>
+                                </div>
+                                <div class="small text-muted" style="font-size: 0.75rem;">Department</div>
+                            </div>
+                        </div>
+
+                        <div class="border-top pt-3 mt-auto">
+                            <div class="row g-2 text-center">
+                                <div class="col-6 border-end">
+                                    <div class="h5 mb-0 fw-bold text-primary">
+                                        <%= course.assignment_count || 0 %>
+                                    </div>
+                                    <div class="small text-muted">Assignments</div>
+                                </div>
+                                <div class="col-6">
+                                    <div
+                                        class="h5 mb-0 fw-bold <%= course.enrollment_status === 'active' ? 'text-success' : 'text-warning' %>">
+                                        <%= course.enrollment_status==='active' ? 'Active' : 'Pending' %>
+                                    </div>
+                                    <div class="small text-muted">Status</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% }); %>
+                <% } else { %>
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm rounded-4 p-5 text-center">
+                            <div class="mb-3">
+                                <div class="icon-circle bg-light text-muted mx-auto"
+                                    style="width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-book-open fa-3x"></i>
+                                </div>
+                            </div>
+                            <h3>No Courses Found</h3>
+                            <p class="text-muted">You are not enrolled in any courses yet.</p>
+                            <a href="#" class="btn btn-primary px-4 rounded-pill">Browse Courses</a>
+                        </div>
+                    </div>
+                    <% } %>
+</div>

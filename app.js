@@ -50,7 +50,7 @@ app.use(helmet({
 const localsMiddleware = require('./app/middleware/locals');
 
 // After session middleware but before routes
-app.use(localsMiddleware); 
+app.use(localsMiddleware);
 
 app.use(compression());
 
@@ -70,22 +70,38 @@ const authLimiter = rateLimit({
 app.use(limiter);
 app.use('/auth', authLimiter);
 
+// Ensure logging directory exists (Disabled on Vercel)
+const isVercel = process.env.VERCEL === '1' || !!process.env.VERCEL;
+let accessLogStream, errorLogStream;
+
+if (!isVercel) {
+  const logDir = path.join(__dirname, 'storage/logs');
+  if (!fs.existsSync(logDir)) {
+    fs.mkdirSync(logDir, { recursive: true });
+  }
+
+  accessLogStream = fs.createWriteStream(
+    path.join(__dirname, 'storage/logs/access.log'),
+    { flags: 'a' }
+  );
+
+  errorLogStream = fs.createWriteStream(
+    path.join(__dirname, 'storage/logs/error.log'),
+    { flags: 'a' }
+  );
+}
+
 // Logging setup
-const accessLogStream = fs.createWriteStream(
-  path.join(__dirname, 'storage/logs/access.log'), 
-  { flags: 'a' }
-);
+if (accessLogStream) {
+  app.use(morgan('combined', { stream: accessLogStream }));
+}
 
-const errorLogStream = fs.createWriteStream(
-  path.join(__dirname, 'storage/logs/error.log'), 
-  { flags: 'a' }
-);
-
-app.use(morgan('combined', { stream: accessLogStream }));
-app.use(morgan('dev', {
-  skip: (req, res) => res.statusCode < 400,
-  stream: errorLogStream
-}));
+if (errorLogStream) {
+  app.use(morgan('dev', {
+    skip: (req, res) => res.statusCode < 400,
+    stream: errorLogStream
+  }));
+}
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
@@ -116,7 +132,7 @@ app.use(session({
   store: sessionStore,
   resave: false,
   saveUninitialized: false,
-  cookie: { 
+  cookie: {
     secure: process.env.NODE_ENV === 'production',
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
     httpOnly: true,
@@ -143,10 +159,10 @@ app.use((req, res, next) => {
   res.locals.currentYear = new Date().getFullYear();
   res.locals.app_version = process.env.APP_VERSION || '1.0.0';
   res.locals.app_env = process.env.NODE_ENV || 'development';
-  
+
   // Set layout based on user role
   if (req.user) {
-    switch (req.user.role) {
+    switch (req.user.role_name) {
       case 'admin':
         res.locals.layout = 'layouts/admin-layout';
         break;
@@ -156,7 +172,7 @@ app.use((req, res, next) => {
       case 'instructor':
         res.locals.layout = 'layouts/instructor-layout';
         break;
-      case 'finance':
+      case 'finance_officer':
         res.locals.layout = 'layouts/finance-layout';
         break;
       default:
@@ -165,7 +181,7 @@ app.use((req, res, next) => {
   } else {
     res.locals.layout = 'layouts/layout';
   }
-  
+
   next();
 });
 
@@ -195,11 +211,11 @@ const testDatabaseConnection = async () => {
     const connection = await pool.getConnection();
     console.log(' Connected to database as id ' + connection.threadId);
     connection.release();
-    
+
     // Perform initial health check
     const health = await checkDatabaseHealth();
     console.log('📊 Database health:', health.healthy ? 'Healthy' : 'Unhealthy');
-    
+
   } catch (err) {
     console.error('❌ Database connection failed: ' + err.stack);
     process.exit(1);
@@ -250,22 +266,22 @@ const safeRequireRoute = (routePath, routeName) => {
     return route;
   } catch (error) {
     console.error(`❌ ${routeName} routes failed:`, error.message);
-    
+
     // Create a fallback router for missing routes
     const fallbackRouter = express.Router();
     fallbackRouter.get('*', (req, res) => {
-      res.status(501).render('error/501', { 
+      res.status(501).render('error/501', {
         title: 'Route Not Implemented',
         message: `The ${routeName} routes are not yet implemented.`
       });
     });
     fallbackRouter.post('*', (req, res) => {
-      res.status(501).json({ 
+      res.status(501).json({
         error: 'Route not implemented',
         message: `The ${routeName} API routes are not yet implemented.`
       });
     });
-    
+
     return fallbackRouter;
   }
 };
@@ -302,7 +318,7 @@ app.use(errorHandler);
 
 // 404 handler (must be last route)
 app.use((req, res) => {
-  res.status(404).render('error/404', { 
+  res.status(404).render('error/404', {
     title: 'Page Not Found',
     message: 'The page you are looking for does not exist.'
   });
@@ -337,19 +353,19 @@ const startServer = async (port) => {
   try {
     // Test database connection before starting server
     await testDatabaseConnection();
-    
+
     const server = app.listen(port, () => {
-//       console.log(`
-// 🚀 EduLMS Server Started Successfully!
-// ----------------------------------------
-// 🌍 Environment: ${process.env.NODE_ENV || 'development'}
-// 📚 Application: ${process.env.SITE_NAME || 'EduLMS'}
-// 🔗 URL: http://localhost:${port}
-// 📊 Version: ${process.env.APP_VERSION || '1.0.0'}
-// ⏰ Started: ${new Date().toLocaleString()}
-// 💾 Database: Connected
-// ----------------------------------------
-//       `);
+      //       console.log(`
+      // 🚀 EduLMS Server Started Successfully!
+      // ----------------------------------------
+      // 🌍 Environment: ${process.env.NODE_ENV || 'development'}
+      // 📚 Application: ${process.env.SITE_NAME || 'EduLMS'}
+      // 🔗 URL: http://localhost:${port}
+      // 📊 Version: ${process.env.APP_VERSION || '1.0.0'}
+      // ⏰ Started: ${new Date().toLocaleString()}
+      // 💾 Database: Connected
+      // ----------------------------------------
+      //       `);
       console.log(` Application: ${process.env.SITE_NAME || 'EduLMS'}
  URL: http://localhost:${port}`)
     });
@@ -364,7 +380,7 @@ const startServer = async (port) => {
       }
     });
 
-    return server; 
+    return server;
   } catch (error) {
     console.error('❌ Failed to start server:', error);
     process.exit(1);

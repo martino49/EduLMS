@@ -1,59 +1,27 @@
 const express = require('express');
 const router = express.Router();
 
-// Simple student auth middleware (since ensureStudentAuth doesn't exist)
-const ensureStudentAuth = (req, res, next) => {
-  if (req.isAuthenticated() && req.user.role_name === 'student') {
-    return next();
-  }
-  req.flash('error_msg', 'Please log in as student to access this page');
-  res.redirect('/auth/login');
-};
+const { isAuthenticated, hasRole } = require('../middleware/auth');
+const studentController = require('../controllers/users/studentController');
 
 // Apply student auth middleware to all routes
-router.use(ensureStudentAuth);
+router.use(isAuthenticated);
+router.use(hasRole('student'));
 
 // Dashboard
-router.get('/dashboard', (req, res) => {
-  res.render('student/dashboard', {
-    title: 'Student Dashboard',
-    user: req.user
-  });
-});
+router.get('/dashboard', studentController.dashboard);
 
 // Course routes
-router.get('/courses', (req, res) => {
-  res.render('student/courses', {
-    title: 'My Courses', 
-    user: req.user
-  });
-});
+router.get('/courses', studentController.getCourses);
 
 // Assignment routes  
-router.get('/assignments', (req, res) => {
-  res.render('student/assignments', {
-    title: 'My Assignments',
-    user: req.user
-  });
-});
-
-// Simple placeholder for assignment submission
-router.post('/assignments/:assignmentId/submit', (req, res) => {
-  req.flash('success', 'Assignment submitted successfully');
-  res.redirect('/student/assignments');
-});
+router.get('/assignments', studentController.getAssignments);
+router.post('/assignments/:assignmentId/submit', studentController.submitAssignment);
 
 // Grade routes
-router.get('/grades', (req, res) => {
-  res.render('student/grades', {
-    title: 'My Grades',
-    user: req.user
-  });
-});
+router.get('/grades', studentController.getGrades);
 
 // Notification routes
-router.post('/notifications/:notificationId/read', (req, res) => {
-  res.json({ success: true });
-});
+router.post('/notifications/:notificationId/read', studentController.markNotificationAsRead);
 
 module.exports = router;

@@ -1,4 +1,4 @@
-const db = require('../../config/database');
+const { pool: db } = require('../../config/database');
 
 class FinanceOfficer {
   // Get financial dashboard overview
@@ -30,7 +30,7 @@ class FinanceOfficer {
           SUM(CASE WHEN status = 'completed' AND payment_date >= DATE_SUB(NOW(), ${interval}) THEN amount ELSE 0 END) as recent_revenue
         FROM payments
       `),
-      
+
       // Recent transactions
       db.query(`
         SELECT 
@@ -47,7 +47,7 @@ class FinanceOfficer {
         ORDER BY p.created_at DESC
         LIMIT 10
       `),
-      
+
       // Fee type summary
       db.query(`
         SELECT 
@@ -62,7 +62,7 @@ class FinanceOfficer {
         GROUP BY fs.fee_type
         ORDER BY total_amount DESC
       `),
-      
+
       // Payment trends
       db.query(`
         SELECT 
@@ -89,7 +89,7 @@ class FinanceOfficer {
   // Get student fee statements
   static async getStudentFeeStatements(filters = {}, page = 1, limit = 20) {
     const offset = (page - 1) * limit;
-    
+
     let query = `
       SELECT 
         u.id as student_id,
@@ -110,14 +110,14 @@ class FinanceOfficer {
         AND u.is_active = 1
         AND fs.is_active = 1
     `;
-    
+
     let countQuery = `
       SELECT COUNT(DISTINCT u.id) as total
       FROM users u
       WHERE u.role_id = (SELECT id FROM roles WHERE name = 'student')
         AND u.is_active = 1
     `;
-    
+
     const params = [];
     const havingConditions = [];
 
@@ -178,7 +178,7 @@ class FinanceOfficer {
         WHERE p.student_id = ?
         ORDER BY p.created_at DESC
       `, [studentId]),
-      
+
       // Fee type summary
       db.query(`
         SELECT 
@@ -194,7 +194,7 @@ class FinanceOfficer {
         GROUP BY fs.id
         ORDER BY fs.fee_type
       `, [studentId]),
-      
+
       // Overall summary
       db.query(`
         SELECT 
@@ -277,18 +277,18 @@ class FinanceOfficer {
     switch (operation) {
       case 'create':
         return await this.createFeeStructure(feeData);
-        
+
       case 'update':
         if (!feeId) throw new Error('Fee ID is required for update');
         return await this.updateFeeStructure(feeId, feeData);
-        
+
       case 'delete':
         if (!feeId) throw new Error('Fee ID is required for delete');
         return await this.deleteFeeStructure(feeId);
-        
+
       case 'list':
         return await this.getFeeStructures(feeData);
-        
+
       default:
         throw new Error('Invalid operation');
     }
@@ -324,7 +324,7 @@ class FinanceOfficer {
   // Update fee structure
   static async updateFeeStructure(feeId, updateData) {
     const allowedFields = ['name', 'description', 'amount', 'fee_type', 'academic_year', 'semester', 'due_date', 'is_active'];
-    
+
     const fieldsToUpdate = {};
     allowedFields.forEach(field => {
       if (updateData[field] !== undefined) {
@@ -366,7 +366,7 @@ class FinanceOfficer {
   // Get fee structures with filtering
   static async getFeeStructures(filters = {}, page = 1, limit = 20) {
     const offset = (page - 1) * limit;
-    
+
     let query = `
       SELECT 
         fs.*,
@@ -377,7 +377,7 @@ class FinanceOfficer {
       LEFT JOIN users u ON fs.created_by = u.id
       LEFT JOIN payments p ON fs.id = p.fee_structure_id
     `;
-    
+
     let countQuery = `SELECT COUNT(*) as total FROM fee_structures fs`;
     const params = [];
     const whereConditions = [];
@@ -434,24 +434,24 @@ class FinanceOfficer {
   // Generate financial reports
   static async generateFinancialReport(reportType, filters = {}) {
     let reportData;
-    
+
     switch (reportType) {
       case 'revenue_summary':
         reportData = await this.generateRevenueSummary(filters);
         break;
-        
+
       case 'fee_collection':
         reportData = await this.generateFeeCollectionReport(filters);
         break;
-        
+
       case 'outstanding_fees':
         reportData = await this.generateOutstandingFeesReport(filters);
         break;
-        
+
       case 'payment_methods':
         reportData = await this.generatePaymentMethodsReport(filters);
         break;
-        
+
       default:
         throw new Error('Invalid report type');
     }
@@ -467,7 +467,7 @@ class FinanceOfficer {
   // Generate revenue summary report
   static async generateRevenueSummary(filters) {
     const { start_date, end_date, fee_type } = filters;
-    
+
     let query = `
       SELECT 
         DATE(p.payment_date) as date,
@@ -480,7 +480,7 @@ class FinanceOfficer {
       LEFT JOIN fee_structures fs ON p.fee_structure_id = fs.id
       WHERE p.status = 'completed'
     `;
-    
+
     const params = [];
 
     if (start_date) {
@@ -526,7 +526,7 @@ class FinanceOfficer {
   // Generate outstanding fees report
   static async generateOutstandingFeesReport(filters) {
     const { department, min_balance } = filters;
-    
+
     let query = `
       SELECT 
         u.student_id,
@@ -548,7 +548,7 @@ class FinanceOfficer {
         AND u.is_active = 1
         AND fs.is_active = 1
     `;
-    
+
     const params = [];
     const havingConditions = ['outstanding_balance > 0'];
 
@@ -576,7 +576,7 @@ class FinanceOfficer {
     const summary = {
       total_students: outstandingFees.length,
       total_outstanding: outstandingFees.reduce((sum, student) => sum + student.outstanding_balance, 0),
-      average_balance: outstandingFees.length > 0 ? 
+      average_balance: outstandingFees.length > 0 ?
         outstandingFees.reduce((sum, student) => sum + student.outstanding_balance, 0) / outstandingFees.length : 0
     };
 
@@ -589,7 +589,7 @@ class FinanceOfficer {
   // Generate fee collection report
   static async generateFeeCollectionReport(filters) {
     const { academic_year, semester } = filters;
-    
+
     let query = `
       SELECT 
         fs.fee_type,
@@ -602,7 +602,7 @@ class FinanceOfficer {
       FROM fee_structures fs
       LEFT JOIN payments p ON fs.id = p.fee_structure_id AND p.status = 'completed'
     `;
-    
+
     const params = [];
     const whereConditions = [];
 
@@ -630,7 +630,7 @@ class FinanceOfficer {
   // Generate payment methods report
   static async generatePaymentMethodsReport(filters) {
     const { start_date, end_date } = filters;
-    
+
     let query = `
       SELECT 
         payment_method,
@@ -644,7 +644,7 @@ class FinanceOfficer {
       FROM payments
       WHERE status = 'completed'
     `;
-    
+
     const params = [];
 
     if (start_date) {

@@ -1,0 +1,139 @@
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h4 class="fw-bold mb-1">
+                    <%= title %>
+                </h4>
+                <p class="text-muted mb-0">Generated on <%= new Date().toLocaleDateString() %>
+                </p>
+            </div>
+            <div>
+                <button class="btn btn-outline-primary me-2" onclick="window.print()">
+                    <i class="fas fa-print me-2"></i>Print
+                </button>
+                <a href="/finance/reports/export?format=csv&report_type=<%= reportType %>" class="btn btn-primary">
+                    <i class="fas fa-download me-2"></i>Export CSV
+                </a>
+            </div>
+        </div>
+
+        <% if (reportType==='revenue_summary' ) { %>
+            <!-- Revenue Summary View -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-white border-0 shadow-sm rounded-4 h-100">
+                        <div class="card-body">
+                            <h6 class="text-muted text-uppercase small fw-bold mb-2">Total Revenue</h6>
+                            <h3 class="fw-bold text-success mb-0">KES <%=
+                                    reportData.summary.total_revenue?.toLocaleString() || '0' %>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                <!-- Add more cards as needed -->
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Transactions</th>
+                                    <th>Daily Revenue</th>
+                                    <th>Fee Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% reportData.revenueData.forEach(function(row) { %>
+                                    <tr>
+                                        <td>
+                                            <%= new Date(row.date).toLocaleDateString() %>
+                                        </td>
+                                        <td>
+                                            <%= row.transaction_count %>
+                                        </td>
+                                        <td>KES <%= row.daily_revenue.toLocaleString() %>
+                                        </td>
+                                        <td>
+                                            <%= row.fee_type.replace('_', ' ' ) %>
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <% } else if (reportType==='outstanding_fees' ) { %>
+                <!-- Outstanding Fees View -->
+                <div class="row g-4 mb-4">
+                    <div class="col-md-4">
+                        <div class="card bg-white border-0 shadow-sm rounded-4 h-100">
+                            <div class="card-body">
+                                <h6 class="text-muted text-uppercase small fw-bold mb-2">Total Outstanding</h6>
+                                <h3 class="fw-bold text-danger mb-0">KES <%=
+                                        reportData.summary.total_outstanding?.toLocaleString() || '0' %>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm rounded-4">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Student</th>
+                                        <th>Contact</th>
+                                        <th>Total Due</th>
+                                        <th>Paid</th>
+                                        <th>Balance</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% reportData.outstandingFees.forEach(function(student) { %>
+                                        <tr>
+                                            <td>
+                                                <div class="fw-bold">
+                                                    <%= student.student_name %>
+                                                </div>
+                                                <div class="small text-muted">
+                                                    <%= student.student_id %>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <%= student.email %>
+                                                </div>
+                                                <div class="small text-muted">
+                                                    <%= student.phone %>
+                                                </div>
+                                            </td>
+                                            <td>KES <%= student.total_due.toLocaleString() %>
+                                            </td>
+                                            <td>KES <%= student.total_paid.toLocaleString() %>
+                                            </td>
+                                            <td class="text-danger fw-bold">KES <%=
+                                                    student.outstanding_balance.toLocaleString() %>
+                                            </td>
+                                        </tr>
+                                        <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <% } else { %>
+                    <div class="alert alert-info">
+                        Detailed view for this report type is under construction. Please use Export CSV for full data.
+                    </div>
+                    <% } %>
+    </div>
+</div>

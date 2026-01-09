@@ -1,4 +1,4 @@
-const db = require('../../../config/database');
+const { pool: db } = require('../../../config/database');
 const FinanceOfficer = require('../../models/FinanceOfficer');
 const User = require('../../models/User');
 const { ROLES, FEE_TYPES } = require('../../../config/constants');
@@ -8,7 +8,7 @@ const financeController = {
   dashboard: async (req, res) => {
     try {
       const timeframe = req.query.timeframe || 'month';
-      
+
       const [financialOverview, recentPayments, feeStructures, outstandingSummary] = await Promise.all([
         FinanceOfficer.getFinancialOverview(timeframe),
         db.query(`
@@ -211,7 +211,7 @@ const financeController = {
           ORDER BY p.created_at ASC
           LIMIT ? OFFSET ?
         `, [limit, (page - 1) * limit]),
-        
+
         db.query(`SELECT COUNT(*) as total FROM payments WHERE status = 'pending'`)
       ]);
 
@@ -705,7 +705,7 @@ const financeController = {
       const { report_type, format, start_date, end_date, fee_type, department, academic_year, semester } = req.query;
 
       if (!report_type) {
-        return res.render('finance/reports/generate', {
+        return res.render('finance/reports/export', {
           title: 'Generate Reports - EduLMS',
           layout: 'layouts/finance-layout',
           currentPage: 'reports'
@@ -737,7 +737,7 @@ const financeController = {
         return res.send(csvData);
       } else {
         // Display in browser
-        res.render('finance/reports/view', {
+        res.render('finance/reports/financial', {
           title: `${report_type.replace('_', ' ').toUpperCase()} Report - EduLMS`,
           layout: 'layouts/finance-layout',
           reportData,
@@ -756,7 +756,7 @@ const financeController = {
 
   // Show report generation form
   showReports: (req, res) => {
-    res.render('finance/reports/generate', {
+    res.render('finance/reports/export', {
       title: 'Generate Reports - EduLMS',
       layout: 'layouts/finance-layout',
       reportTypes: [
@@ -795,7 +795,7 @@ const financeController = {
           ORDER BY p.created_at DESC
           LIMIT ? OFFSET ?
         `, [limit, (page - 1) * limit]),
-        
+
         db.query(`
           SELECT COUNT(*) as total 
           FROM payments 
@@ -874,7 +874,7 @@ const financeController = {
 
       if (errors.length > 0) {
         const feeStructures = await db.query('SELECT * FROM fee_structures WHERE is_active = 1 ORDER BY fee_type, name');
-        
+
         return res.render('finance/payments/manual-entry', {
           title: 'Manual Payment Entry - EduLMS',
           layout: 'layouts/finance-layout',

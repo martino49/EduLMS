@@ -1,242 +1,295 @@
-<aside class="finance-sidebar bg-warning text-dark">
-    <div class="sidebar-header text-center py-4">
-        <div class="finance-avatar mb-3">
-            <img src="<%= user.avatar || '/images/avatars/default.png' %>" alt="Finance Officer Avatar" class="rounded-circle" width="80" height="80">
+<aside class="finance-sidebar" id="financeSidebar">
+    <!-- Finance Profile Section -->
+    <div class="sidebar-finance-header">
+        <div class="finance-badge">TREASURY</div>
+        <div class="finance-avatar-wrapper">
+            <div class="avatar-border"></div>
+            <img src="<%= (currentUser && currentUser.profile_image) || '/images/avatars/default.png' %>" alt="Finance"
+                class="finance-avatar-img">
+            <div class="status-indicator online"></div>
         </div>
-        <h6 class="mb-1"><%= user.firstName %> <%= user.lastName %></h6>
-        <small class="text-muted">Finance Officer</small>
+        <div class="finance-info">
+            <h6 class="finance-name">
+                <%= currentUser ? currentUser.name : 'Finance Officer' %>
+            </h6>
+            <div class="finance-rank">
+                <%= (currentUser && currentUser.employee_id) || 'Accountant' %>
+            </div>
+        </div>
     </div>
-    
-    <nav class="sidebar-nav">
-        <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link <%= currentPage === 'dashboard' ? 'active' : '' %>" href="/finance/dashboard">
-                    <i class="fas fa-tachometer-alt me-2"></i>
-                    Dashboard
-                </a>
-            </li>
-            
-            <li class="nav-section">Payments</li>
-            <li class="nav-item">
-                <a class="nav-link <%= currentPage === 'payments-overview' ? 'active' : '' %>" href="/finance/payments/overview">
-                    <i class="fas fa-chart-line me-2"></i>
-                    Payments Overview
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link <%= currentPage === 'payment-records' ? 'active' : '' %>" href="/finance/payments/records">
-                    <i class="fas fa-list me-2"></i>
-                    Payment Records
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link <%= currentPage === 'pending-payments' ? 'active' : '' %>" href="/finance/payments/pending">
-                    <i class="fas fa-clock me-2"></i>
-                    Pending Payments
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link <%= currentPage === 'verified-payments' ? 'active' : '' %>" href="/finance/payments/verified">
-                    <i class="fas fa-check-circle me-2"></i>
-                    Verified Payments
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link <%= currentPage === 'reconciliation' ? 'active' : '' %>" href="/finance/payments/reconciliation">
-                    <i class="fas fa-balance-scale me-2"></i>
-                    Reconciliation
-                </a>
-            </li>
-            
-            <li class="nav-section">Invoices</li>
-            <li class="nav-item">
-                <a class="nav-link <%= currentPage === 'generate-invoice' ? 'active' : '' %>" href="/finance/invoices/generate">
-                    <i class="fas fa-file-invoice me-2"></i>
-                    Generate Invoice
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link <%= currentPage === 'invoice-history' ? 'active' : '' %>" href="/finance/invoices/history">
-                    <i class="fas fa-history me-2"></i>
-                    Invoice History
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link <%= currentPage === 'send-invoice' ? 'active' : '' %>" href="/finance/invoices/send">
-                    <i class="fas fa-paper-plane me-2"></i>
-                    Send Invoices
-                </a>
-            </li>
-            
-            <li class="nav-section">Fee Management</li>
-            <li class="nav-item">
-                <a class="nav-link <%= currentPage === 'fee-structure' ? 'active' : '' %>" href="/finance/fees/structure">
-                    <i class="fas fa-table me-2"></i>
-                    Fee Structure
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link <%= currentPage === 'create-fee' ? 'active' : '' %>" href="/finance/fees/create">
-                    <i class="fas fa-plus me-2"></i>
-                    Create Fee Item
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link <%= currentPage === 'edit-fee' ? 'active' : '' %>" href="/finance/fees/edit">
-                    <i class="fas fa-edit me-2"></i>
-                    Manage Fees
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link <%= currentPage === 'fee-categories' ? 'active' : '' %>" href="/finance/fees/categories">
-                    <i class="fas fa-folder me-2"></i>
-                    Fee Categories
-                </a>
-            </li>
-            
-            <li class="nav-section">Student Accounts</li>
-            <li class="nav-item">
-                <a class="nav-link <%= currentPage === 'fee-statements' ? 'active' : '' %>" href="/finance/students/fee-statements">
-                    <i class="fas fa-file-alt me-2"></i>
-                    Fee Statements
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link <%= currentPage === 'outstanding-fees' ? 'active' : '' %>" href="/finance/students/outstanding">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
-                    Outstanding Fees
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link <%= currentPage === 'payment-history' ? 'active' : '' %>" href="/finance/students/payment-history">
-                    <i class="fas fa-receipt me-2"></i>
-                    Payment History
-                </a>
-            </li>
-            
-            <li class="nav-section">Reports</li>
-            <li class="nav-item">
-                <a class="nav-link <%= currentPage === 'financial-reports' ? 'active' : '' %>" href="/finance/reports/financial">
-                    <i class="fas fa-chart-bar me-2"></i>
-                    Financial Reports
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link <%= currentPage === 'revenue-reports' ? 'active' : '' %>" href="/finance/reports/revenue">
-                    <i class="fas fa-money-bill-wave me-2"></i>
-                    Revenue Reports
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link <%= currentPage === 'outstanding-reports' ? 'active' : '' %>" href="/finance/reports/outstanding">
-                    <i class="fas fa-chart-pie me-2"></i>
-                    Outstanding Reports
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link <%= currentPage === 'collection-reports' ? 'active' : '' %>" href="/finance/reports/collection">
-                    <i class="fas fa-chart-line me-2"></i>
-                    Collection Reports
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link <%= currentPage === 'export-reports' ? 'active' : '' %>" href="/finance/reports/export">
-                    <i class="fas fa-download me-2"></i>
-                    Export Reports
-                </a>
-            </li>
-        </ul>
-    </nav>
-    
-    <div class="sidebar-footer mt-auto p-3">
-        <div class="finance-metrics">
-            <div class="metric-item">
-                <small>Today's Collection</small>
-                <div class="metric-value text-success">$<%= todaysCollection || '0' %></div>
+
+    <div class="sidebar-divider"></div>
+
+    <!-- Navigation Scroller -->
+    <div class="sidebar-scroller">
+        <nav class="finance-nav">
+            <!-- CORE -->
+            <div class="nav-section">
+                <span class="section-tag">Fiscal Core</span>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a class="nav-link <%= currentPage === 'dashboard' ? 'active' : '' %>"
+                            href="/finance/dashboard">
+                            <span class="nav-icon-box"><i class="fas fa-chart-mixed"></i></span>
+                            <span class="nav-link-text">Fiscal Dashboard</span>
+                        </a>
+                    </li>
+                </ul>
             </div>
-            <div class="metric-item">
-                <small>Pending Verification</small>
-                <div class="metric-value text-warning"><%= pendingVerification || '0' %></div>
+
+            <!-- PAYMENTS -->
+            <div class="nav-section">
+                <span class="section-tag">Transactions</span>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a class="nav-link <%= currentPage === 'payments' ? 'active' : '' %>" href="/finance/payments">
+                            <span class="nav-icon-box"><i class="fas fa-receipt"></i></span>
+                            <span class="nav-link-text">Payment Ledger</span>
+                            <span class="nav-link-badge">18</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= currentPage === 'fees' ? 'active' : '' %>" href="/finance/fee-structure">
+                            <span class="nav-icon-box"><i class="fas fa-file-invoice-dollar"></i></span>
+                            <span class="nav-link-text">Billing Config</span>
+                        </a>
+                    </li>
+                </ul>
             </div>
+
+            <!-- REPORTS -->
+            <div class="nav-section">
+                <span class="section-tag">Auditing</span>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a class="nav-link <%= currentPage === 'reports' ? 'active' : '' %>" href="/finance/reports">
+                            <span class="nav-icon-box"><i class="fas fa-file-chart-pie"></i></span>
+                            <span class="nav-link-text">Revenue Analysis</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Finance Liquidity Footer -->
+    <div class="sidebar-liquidity-footer">
+        <div class="liquidity-card">
+            <span class="liq-label">MONTHLY REVENUE</span>
+            <span class="liq-value">KES 1.2M</span>
+            <div class="liq-trend pos"><i class="fas fa-trending-up"></i> +12.5%</div>
         </div>
     </div>
 </aside>
 
 <style>
-.finance-sidebar {
-    width: 280px;
-    min-height: 100vh;
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-}
+    :root {
+        --fin-bg: #18181b;
+        /* Zinc 900 */
+        --fin-accent: #f59e0b;
+        /* Amber 500 */
+        --fin-text: #a1a1aa;
+        --fin-bright: #fafafa;
+        --fin-border: rgba(245, 158, 11, 0.1);
+    }
 
-.sidebar-header {
-    border-bottom: 1px solid rgba(0,0,0,0.1);
-}
+    .finance-sidebar {
+        width: 280px;
+        height: 100vh;
+        position: fixed;
+        left: 0;
+        top: 0;
+        background: var(--fin-bg);
+        display: flex;
+        flex-direction: column;
+        color: var(--fin-text);
+        z-index: 1000;
+        font-family: 'Inter', sans-serif;
+        border-right: 1px solid var(--fin-border);
+    }
 
-.finance-avatar img {
-    border: 3px solid rgba(0,0,0,0.1);
-}
+    /* HEADER STYLE */
+    .sidebar-finance-header {
+        padding: 2.5rem 1.5rem 1.75rem;
+        position: relative;
+    }
 
-.nav-section {
-    padding: 0.75rem 1rem;
-    color: rgba(0,0,0,0.6);
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-top: 1rem;
-}
+    .finance-badge {
+        position: absolute;
+        top: 1rem;
+        left: 1.5rem;
+        font-size: 0.55rem;
+        font-weight: 900;
+        letter-spacing: 1.5px;
+        color: var(--fin-bright);
+        background: var(--fin-accent);
+        padding: 2px 8px;
+        border-radius: 4px;
+        box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+    }
 
-.sidebar-nav .nav-link {
-    color: rgba(0,0,0,0.8);
-    padding: 0.75rem 1rem;
-    border-left: 3px solid transparent;
-    transition: all 0.3s ease;
-}
+    .finance-avatar-wrapper {
+        position: relative;
+        width: 54px;
+        height: 54px;
+        margin-bottom: 1rem;
+    }
 
-.sidebar-nav .nav-link:hover {
-    color: #000;
-    background-color: rgba(0,0,0,0.1);
-    border-left-color: #000;
-}
+    .avatar-border {
+        position: absolute;
+        inset: -4px;
+        border: 1px solid var(--fin-accent);
+        border-radius: 8px;
+        opacity: 0.4;
+    }
 
-.sidebar-nav .nav-link.active {
-    color: #000;
-    background-color: rgba(0,0,0,0.15);
-    border-left-color: #000;
-}
+    .finance-avatar-img {
+        width: 100%;
+        height: 100%;
+        border-radius: 6px;
+        object-fit: cover;
+        border: 2px solid var(--fin-bg);
+    }
 
-.sidebar-nav .nav-link i {
-    width: 20px;
-    text-align: center;
-}
+    .status-indicator {
+        position: absolute;
+        bottom: -4px;
+        right: -4px;
+        width: 12px;
+        height: 12px;
+        background: #10b981;
+        border: 2px solid var(--fin-bg);
+        border-radius: 50%;
+    }
 
-.finance-metrics {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-}
+    .finance-name {
+        color: var(--fin-bright);
+        font-weight: 700;
+        margin-bottom: 0.1rem;
+        font-family: 'Outfit', sans-serif;
+        font-size: 1rem;
+    }
 
-.metric-item {
-    text-align: center;
-    padding: 0.5rem;
-    background: rgba(0,0,0,0.1);
-    border-radius: 0.375rem;
-}
+    .finance-rank {
+        font-size: 0.7rem;
+        opacity: 0.6;
+        font-weight: 500;
+    }
 
-.metric-item small {
-    display: block;
-    font-size: 0.7rem;
-    opacity: 0.8;
-}
+    .sidebar-divider {
+        height: 1px;
+        background: var(--fin-border);
+        margin: 0 1.5rem;
+    }
 
-.metric-value {
-    font-weight: bold;
-    font-size: 1rem;
-}
+    /* NAVIGATION */
+    .sidebar-scroller {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1.5rem 0.75rem;
+    }
+
+    .nav-section {
+        margin-bottom: 1.75rem;
+    }
+
+    .section-tag {
+        display: block;
+        font-size: 0.6rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #52525b;
+        margin-bottom: 0.75rem;
+        padding-left: 0.75rem;
+    }
+
+    .nav-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .nav-item {
+        margin-bottom: 4px;
+    }
+
+    .nav-link {
+        display: flex;
+        align-items: center;
+        padding: 10px 14px;
+        border-radius: 8px;
+        color: var(--fin-text);
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .nav-link:hover {
+        background: rgba(245, 158, 11, 0.05);
+        color: var(--fin-accent);
+    }
+
+    .nav-link.active {
+        background: rgba(245, 158, 11, 0.1);
+        color: var(--fin-accent);
+        font-weight: 600;
+    }
+
+    .nav-icon-box {
+        width: 28px;
+        font-size: 1rem;
+    }
+
+    .nav-link-text {
+        flex: 1;
+        font-size: 0.85rem;
+    }
+
+    .nav-link-badge {
+        font-size: 0.65rem;
+        font-weight: 800;
+        background: var(--fin-accent);
+        color: var(--fin-bg);
+        padding: 1px 6px;
+        border-radius: 4px;
+    }
+
+    /* FOOTER LIQUIDITY */
+    .sidebar-liquidity-footer {
+        padding: 1.5rem;
+        background: rgba(0, 0, 0, 0.3);
+    }
+
+    .liquidity-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--fin-border);
+        border-radius: 12px;
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .liq-label {
+        font-size: 0.6rem;
+        font-weight: 800;
+        letter-spacing: 1px;
+        color: #71717a;
+        margin-bottom: 4px;
+    }
+
+    .liq-value {
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: var(--fin-bright);
+        font-family: 'Outfit', sans-serif;
+    }
+
+    .liq-trend {
+        font-size: 0.65rem;
+        font-weight: 700;
+        margin-top: 4px;
+    }
+
+    .liq-trend.pos {
+        color: #10b981;
+    }
 </style>

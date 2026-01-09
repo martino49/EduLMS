@@ -19,7 +19,7 @@ router.get('/', (req, res) => {
         return res.redirect('/auth/login');
     }
   }
-  res.render('index', { 
+  res.render('index', {
     title: 'Welcome to EduLMS',
     layout: 'layouts/layout'
   });
@@ -61,6 +61,46 @@ router.get('/privacy', (req, res) => {
 router.get('/terms', (req, res) => {
   res.render('terms', {
     title: 'Terms of Service - EduLMS',
+    layout: 'layouts/layout'
+  });
+});
+
+// Help Center
+router.get('/help', (req, res) => {
+  res.render('help', {
+    title: 'Help Center - EduLMS',
+    layout: 'layouts/layout'
+  });
+});
+
+// Academic Programs
+router.get('/programs', (req, res) => {
+  res.render('programs', {
+    title: 'Academic Programs - EduLMS',
+    layout: 'layouts/layout'
+  });
+});
+
+// Library
+router.get('/library', (req, res) => {
+  res.render('library', {
+    title: 'Library - EduLMS',
+    layout: 'layouts/layout'
+  });
+});
+
+// Academic Calendar
+router.get('/calendar', (req, res) => {
+  res.render('calendar', {
+    title: 'Academic Calendar - EduLMS',
+    layout: 'layouts/layout'
+  });
+});
+
+// Public Course Catalog
+router.get('/courses', (req, res) => {
+  res.render('courses_public', {
+    title: 'Browse Courses - EduLMS',
     layout: 'layouts/layout'
   });
 });

@@ -1,573 +1,588 @@
-<aside class="admin-sidebar">
-    <div class="sidebar-header text-center py-4">
-        <div class="logo-container mb-3">
-            <div class="logo-icon">
-                <i class="fas fa-graduation-cap"></i>
+<aside class="admin-sidebar" id="mainSidebar">
+    <!-- Sophisticated Logo Section -->
+    <div class="sidebar-brand">
+        <div class="brand-logo-wrapper">
+            <div class="brand-glow"></div>
+            <div class="brand-icon">
+                <i class="fas fa-terminal"></i>
+            </div>
+            <div class="brand-text">
+                <span class="brand-main">EduLMS</span>
+                <span class="brand-sub">Core Platform</span>
             </div>
         </div>
-        <h5 class="brand-name mb-1">EduLMS Pro</h5>
-        <small class="brand-subtitle">Education Platform</small>
+        <button class="sidebar-toggle" onclick="toggleSidebarInternal()">
+            <i class="fas fa-chevron-left"></i>
+        </button>
     </div>
-    
-    <div class="sidebar-content">
-        <nav class="sidebar-nav">
-            <ul class="nav flex-column">
-                <!-- Dashboard -->
-                <li class="nav-item">
-                    <a class="nav-link dashboard-link <%= currentPage === 'dashboard' ? 'active' : '' %>" href="/admin/dashboard">
-                        <div class="nav-icon">
-                            <i class="fas fa-tachometer-alt"></i>
-                        </div>
-                        <span class="nav-text">Dashboard</span>
-                    </a>
-                </li>
-                
-                <!-- User Management -->
-                <li class="nav-section">
-                    <span>User Management</span>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link users-link <%= currentPage === 'users' ? 'active' : '' %>" href="/admin/users">
-                        <div class="nav-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <span class="nav-text">All Users</span>
-                        <span class="nav-badge">45</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link students-link <%= currentPage === 'students' ? 'active' : '' %>" href="/admin/users/students">
-                        <div class="nav-icon">
-                            <i class="fas fa-user-graduate"></i>
-                        </div>
-                        <span class="nav-text">Students</span>
-                        <span class="nav-badge">32</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link instructors-link <%= currentPage === 'instructors' ? 'active' : '' %>" href="/admin/users/instructors">
-                        <div class="nav-icon">
-                            <i class="fas fa-chalkboard-teacher"></i>
-                        </div>
-                        <span class="nav-text">Instructors</span>
-                        <span class="nav-badge">8</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link finance-link <%= currentPage === 'finance' ? 'active' : '' %>" href="/admin/users/finance-officers">
-                        <div class="nav-icon">
-                            <i class="fas fa-money-check"></i>
-                        </div>
-                        <span class="nav-text">Finance Officers</span>
-                        <span class="nav-badge">5</span>
-                    </a>
-                </li>
-                
-                <!-- Academic -->
-                <li class="nav-section">
-                    <span>Academic</span>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link courses-link <%= currentPage === 'courses' ? 'active' : '' %>" href="/admin/courses">
-                        <div class="nav-icon">
-                            <i class="fas fa-book"></i>
-                        </div>
-                        <span class="nav-text">Courses</span>
-                        <span class="nav-badge">12</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link enrollments-link <%= currentPage === 'academic' ? 'active' : '' %>" href="/admin/enrollments">
-                        <div class="nav-icon">
-                            <i class="fas fa-user-plus"></i>
-                        </div>
-                        <span class="nav-text">Enrollments</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link assignments-link <%= currentPage === 'academic' ? 'active' : '' %>" href="/admin/assignments">
-                        <div class="nav-icon">
-                            <i class="fas fa-tasks"></i>
-                        </div>
-                        <span class="nav-text">Assignments</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link grades-link <%= currentPage === 'academic' ? 'active' : '' %>" href="/admin/grades">
-                        <div class="nav-icon">
-                            <i class="fas fa-chart-bar"></i>
-                        </div>
-                        <span class="nav-text">Grades</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link submissions-link <%= currentPage === 'academic' ? 'active' : '' %>" href="/admin/submissions">
-                        <div class="nav-icon">
-                            <i class="fas fa-file-upload"></i>
-                        </div>
-                        <span class="nav-text">Submissions</span>
-                    </a>
-                </li>
-                
-                <!-- Finance -->
-                <li class="nav-section">
-                    <span>Finance</span>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link finance-overview-link <%= currentPage === 'finance' ? 'active' : '' %>" href="/admin/finance/overview">
-                        <div class="nav-icon">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <span class="nav-text">Financial Overview</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link payments-link <%= currentPage === 'payments' ? 'active' : '' %>" href="/admin/finance/payments">
-                        <div class="nav-icon">
-                            <i class="fas fa-credit-card"></i>
-                        </div>
-                        <span class="nav-text">Payments</span>
-                        <span class="nav-badge new">24</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link fees-link <%= currentPage === 'fees' ? 'active' : '' %>" href="/admin/finance/fee-structure">
-                        <div class="nav-icon">
-                            <i class="fas fa-file-invoice-dollar"></i>
-                        </div>
-                        <span class="nav-text">Fee Structure</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link revenue-link <%= currentPage === 'reports' ? 'active' : '' %>" href="/admin/finance/revenue-reports">
-                        <div class="nav-icon">
-                            <i class="fas fa-chart-pie"></i>
-                        </div>
-                        <span class="nav-text">Revenue Reports</span>
-                    </a>
-                </li>
-                
-                <!-- System -->
-                <li class="nav-section">
-                    <span>System</span>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link settings-link <%= currentPage === 'settings' ? 'active' : '' %>" href="/admin/system/settings">
-                        <div class="nav-icon">
-                            <i class="fas fa-cog"></i>
-                        </div>
-                        <span class="nav-text">System Settings</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link notifications-link <%= currentPage === 'notifications' ? 'active' : '' %>" href="/admin/system/notifications">
-                        <div class="nav-icon">
-                            <i class="fas fa-bell"></i>
-                        </div>
-                        <span class="nav-text">Notifications</span>
-                        <span class="nav-badge alert">3</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link audit-link <%= currentPage === 'audit' ? 'active' : '' %>" href="/admin/system/audit-logs">
-                        <div class="nav-icon">
-                            <i class="fas fa-clipboard-check"></i>
-                        </div>
-                        <span class="nav-text">Audit Logs</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link backup-link <%= currentPage === 'backup' ? 'active' : '' %>" href="/admin/system/backup">
-                        <div class="nav-icon">
-                            <i class="fas fa-database"></i>
-                        </div>
-                        <span class="nav-text">Backup & Restore</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link health-link <%= currentPage === 'health' ? 'active' : '' %>" href="/admin/system/system-health">
-                        <div class="nav-icon">
-                            <i class="fas fa-heartbeat"></i>
-                        </div>
-                        <span class="nav-text">System Health</span>
-                    </a>
-                </li>
 
-                <!-- Reports -->
-                <li class="nav-section">
-                    <span>Reports</span>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link generate-reports-link <%= currentPage === 'reports' ? 'active' : '' %>" href="/admin/reports/generate">
-                        <div class="nav-icon">
-                            <i class="fas fa-file-alt"></i>
-                        </div>
-                        <span class="nav-text">Generate Reports</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link student-reports-link <%= currentPage === 'reports' ? 'active' : '' %>" href="/admin/reports/student-reports">
-                        <div class="nav-icon">
-                            <i class="fas fa-user-graduate"></i>
-                        </div>
-                        <span class="nav-text">Student Reports</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link financial-reports-link <%= currentPage === 'reports' ? 'active' : '' %>" href="/admin/reports/financial-reports">
-                        <div class="nav-icon">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <span class="nav-text">Financial Reports</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link academic-reports-link <%= currentPage === 'reports' ? 'active' : '' %>" href="/admin/reports/academic-reports">
-                        <div class="nav-icon">
-                            <i class="fas fa-graduation-cap"></i>
-                        </div>
-                        <span class="nav-text">Academic Reports</span>
-                    </a>
-                </li>
-            </ul>
+    <!-- User Context Quick View -->
+    <div class="sidebar-user-context">
+        <div class="user-pill">
+            <div class="user-status online"></div>
+            <span class="user-role-badge">ADMIN</span>
+            <span class="user-name-abbr">
+                <%= currentUser && currentUser.initials ? currentUser.initials : 'ADM' %>
+            </span>
+        </div>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <!-- Navigation Content -->
+    <div class="sidebar-scroller">
+        <nav class="sidebar-nav-container">
+            <!-- GROUP: OPERATIONS -->
+            <div class="nav-group">
+                <div class="nav-group-header">Operations</div>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a class="nav-link <%= currentPage === 'dashboard' ? 'active' : '' %>" href="/admin/dashboard">
+                            <span class="icon-box"><i class="fas fa-grid-2"></i></span>
+                            <span class="link-label">System Console</span>
+                            <span class="link-hint">Dashboard</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- GROUP: ENTITIES -->
+            <div class="nav-group">
+                <div class="nav-group-header">Core Entities</div>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a class="nav-link <%= currentPage === 'users' ? 'active' : '' %>" href="/admin/users">
+                            <span class="icon-box"><i class="fas fa-users-viewfinder"></i></span>
+                            <span class="link-label">Registry</span>
+                            <span class="link-badge">45</span>
+                        </a>
+                    </li>
+                    <li class="nav-item-sub">
+                        <ul class="sub-nav-list">
+                            <li><a href="/admin/users/students"
+                                    class="<%= currentPage === 'students' ? 'active' : '' %>">Students</a></li>
+                            <li><a href="/admin/users/instructors"
+                                    class="<%= currentPage === 'instructors' ? 'active' : '' %>">Instructors</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= currentPage === 'courses' ? 'active' : '' %>" href="/admin/courses">
+                            <span class="icon-box"><i class="fas fa-layer-group"></i></span>
+                            <span class="link-label">Curriculum</span>
+                            <span class="link-badge">12</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- GROUP: FISCAL -->
+            <div class="nav-group">
+                <div class="nav-group-header">Fiscal Layer</div>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a class="nav-link <%= currentPage === 'payments' ? 'active' : '' %>"
+                            href="/admin/finance/payments">
+                            <span class="icon-box"><i class="fas fa-vault"></i></span>
+                            <span class="link-label">Ledger</span>
+                            <span class="link-badge pulse">24</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= currentPage === 'fees' ? 'active' : '' %>"
+                            href="/admin/finance/fee-structure">
+                            <span class="icon-box"><i class="fas fa-calculator"></i></span>
+                            <span class="link-label">Provisioning</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- GROUP: INFRASTRUCTURE -->
+            <div class="nav-group">
+                <div class="nav-group-header">Infrastructure</div>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a class="nav-link <%= currentPage === 'settings' ? 'active' : '' %>"
+                            href="/admin/system/settings">
+                            <span class="icon-box"><i class="fas fa-microchip"></i></span>
+                            <span class="link-label">Configurations</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= currentPage === 'audit' ? 'active' : '' %>"
+                            href="/admin/system/audit-logs">
+                            <span class="icon-box"><i class="fas fa-fingerprint"></i></span>
+                            <span class="link-label">Audit Stream</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </nav>
     </div>
-    
-    <div class="sidebar-footer">
-        <div class="system-status-card">
-            <div class="status-header">
-                <div class="status-indicator online"></div>
-                <span class="status-title">System Online</span>
+
+    <!-- Sidebar Footer: System Integrity -->
+    <div class="sidebar-footer-integrity">
+        <div class="integrity-card">
+            <div class="integrity-header">
+                <span class="integrity-title">NODE STATUS</span>
+                <span class="integrity-status-text">Health 100%</span>
             </div>
-            <div class="status-metrics">
-                <div class="metric">
-                    <span class="metric-value">99.9%</span>
-                    <span class="metric-label">Uptime</span>
-                </div>
-                <div class="metric">
-                    <span class="metric-value">2.4s</span>
-                    <span class="metric-label">Response</span>
-                </div>
-            </div>
-        </div>
-        
-        <div class="user-profile-card">
-            <div class="user-avatar">
-                <div class="avatar-image">
-                    <%= currentUser && currentUser.initials ? currentUser.initials : 'AU' %>
-                </div>
-                <div class="online-dot"></div>
-            </div>
-            <div class="user-info">
-                <div class="user-name"><%= currentUser && currentUser.name ? currentUser.name : 'Admin User' %></div>
-                <div class="user-role">System Administrator</div>
+            <div class="integrity-bar">
+                <div class="integrity-progress" style="width: 100%"></div>
             </div>
         </div>
     </div>
 </aside>
 
 <style>
-:root {
-    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-    --sidebar-bg: linear-gradient(180deg, #2c3e50 0%, #3498db 100%);
-    --card-bg: rgba(255, 255, 255, 0.1);
-    --text-primary: #ffffff;
-    --text-secondary: rgba(255, 255, 255, 0.9);
-    --text-muted: rgba(255, 255, 255, 0.7);
-}
+    :root {
+        --sb-bg: #0f172a;
+        --sb-accent: #38bdf8;
+        --sb-accent-rgb: 56, 189, 248;
+        --sb-text: #94a3b8;
+        --sb-text-bright: #f1f5f9;
+        --sb-border: rgba(255, 255, 255, 0.05);
+        --sb-hover-bg: rgba(255, 255, 255, 0.03);
+        --sb-active-bg: linear-gradient(90deg, rgba(56, 189, 248, 0.1) 0%, rgba(56, 189, 248, 0) 100%);
+        --sb-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-.admin-sidebar {
-    width: 280px;
-    height: 100vh;
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    background: var(--sidebar-bg);
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.sidebar-header {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
-    flex-shrink: 0;
-    padding: 1.5rem 1rem;
-}
-
-.logo-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 1rem;
-}
-
-.logo-icon {
-    width: 50px;
-    height: 50px;
-    background: var(--primary-gradient);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.5rem;
-}
-
-.brand-name {
-    font-weight: 700;
-    color: var(--text-primary);
-    font-size: 1.2rem;
-}
-
-.brand-subtitle {
-    color: var(--text-muted);
-    font-size: 0.8rem;
-}
-
-.sidebar-content {
-    flex: 1;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 1rem 0;
-}
-
-.sidebar-content::-webkit-scrollbar {
-    width: 4px;
-}
-
-.sidebar-content::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.sidebar-content::-webkit-scrollbar-thumb {
-    background: var(--primary-gradient);
-    border-radius: 2px;
-}
-
-.sidebar-nav {
-    padding: 0 0.75rem;
-}
-
-.nav-section {
-    padding: 1rem 0.75rem 0.5rem;
-    color: var(--text-muted);
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 0.5rem;
-}
-
-.sidebar-nav .nav-link {
-    display: flex;
-    align-items: center;
-    color: var(--text-secondary);
-    padding: 0.75rem 1rem;
-    border-radius: 8px;
-    text-decoration: none;
-    margin: 0.25rem 0;
-    background: transparent;
-    border: none;
-    transition: all 0.2s ease;
-}
-
-.sidebar-nav .nav-link:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text-primary);
-}
-
-.sidebar-nav .nav-link.active {
-    background: var(--primary-gradient);
-    color: white;
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-}
-
-.nav-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 12px;
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text-secondary);
-}
-
-.sidebar-nav .nav-link.active .nav-icon {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-}
-
-.nav-text {
-    flex: 1;
-    font-weight: 500;
-    font-size: 0.9rem;
-}
-
-.nav-badge {
-    background: var(--success-gradient);
-    color: white;
-    padding: 0.2rem 0.5rem;
-    border-radius: 12px;
-    font-size: 0.7rem;
-    font-weight: 600;
-    min-width: 20px;
-    text-align: center;
-}
-
-.nav-badge.new {
-    background: var(--secondary-gradient);
-}
-
-.nav-badge.alert {
-    background: var(--warning-gradient);
-}
-
-/* Sidebar Footer */
-.sidebar-footer {
-    background: rgba(0, 0, 0, 0.1);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    flex-shrink: 0;
-    padding: 1rem;
-}
-
-.system-status-card {
-    background: var(--card-bg);
-    border-radius: 8px;
-    padding: 0.75rem;
-    margin-bottom: 1rem;
-    backdrop-filter: blur(10px);
-}
-
-.status-header {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-}
-
-.status-indicator {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-}
-
-.status-indicator.online {
-    background: var(--success-gradient);
-}
-
-.status-title {
-    color: var(--text-primary);
-    font-weight: 600;
-    font-size: 0.8rem;
-}
-
-.status-metrics {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
-}
-
-.metric {
-    text-align: center;
-}
-
-.metric-value {
-    display: block;
-    color: var(--text-primary);
-    font-weight: 700;
-    font-size: 0.8rem;
-}
-
-.metric-label {
-    display: block;
-    color: var(--text-muted);
-    font-size: 0.65rem;
-    margin-top: 0.1rem;
-}
-
-.user-profile-card {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem;
-    background: var(--card-bg);
-    border-radius: 8px;
-    backdrop-filter: blur(10px);
-}
-
-.user-avatar {
-    position: relative;
-}
-
-.avatar-image {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    background: var(--primary-gradient);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: 600;
-    font-size: 0.8rem;
-}
-
-.online-dot {
-    position: absolute;
-    bottom: 2px;
-    right: 2px;
-    width: 8px;
-    height: 8px;
-    background: var(--success-gradient);
-    border: 2px solid var(--sidebar-bg);
-    border-radius: 50%;
-}
-
-.user-info {
-    flex: 1;
-}
-
-.user-name {
-    color: var(--text-primary);
-    font-weight: 600;
-    font-size: 0.85rem;
-    margin-bottom: 0.1rem;
-}
-
-.user-role {
-    color: var(--text-muted);
-    font-size: 0.7rem;
-}
-
-/* Mobile responsiveness */
-@media (max-width: 768px) {
     .admin-sidebar {
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
+        width: 280px;
+        height: 100vh;
+        position: fixed;
+        left: 0;
+        top: 0;
+        background: var(--sb-bg);
+        color: var(--sb-text);
+        display: flex;
+        flex-direction: column;
+        z-index: 1000;
+        border-right: 1px solid var(--sb-border);
+        transition: var(--sb-transition);
+        font-family: 'Inter', sans-serif;
     }
-    
-    .admin-sidebar.mobile-open {
-        transform: translateX(0);
-    }
-}
 
-/* Focus states for accessibility */
-.sidebar-nav .nav-link:focus {
-    outline: 2px solid rgba(255, 255, 255, 0.5);
-    outline-offset: 2px;
-}
+    /* BRANDING */
+    .sidebar-brand {
+        padding: 2rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+    }
+
+    .brand-logo-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .brand-glow {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        background: var(--sb-accent);
+        filter: blur(25px);
+        opacity: 0.3;
+        left: -5px;
+        top: -5px;
+        z-index: -1;
+    }
+
+    .brand-icon {
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--sb-border);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--sb-accent);
+        font-size: 1.2rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .brand-text {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .brand-main {
+        font-family: 'Outfit', sans-serif;
+        font-weight: 800;
+        font-size: 1.4rem;
+        color: var(--sb-text-bright);
+        letter-spacing: -0.5px;
+        line-height: 1;
+    }
+
+    .brand-sub {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--sb-accent);
+        font-weight: 600;
+        margin-top: 4px;
+    }
+
+    .sidebar-toggle {
+        background: transparent;
+        border: none;
+        color: var(--sb-text);
+        cursor: pointer;
+        font-size: 0.8rem;
+        opacity: 0.5;
+        transition: var(--sb-transition);
+    }
+
+    .sidebar-toggle:hover {
+        opacity: 1;
+        color: var(--sb-accent);
+    }
+
+    /* USER PILL */
+    .sidebar-user-context {
+        padding: 0 1.5rem 1.5rem;
+    }
+
+    .user-pill {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--sb-border);
+        border-radius: 100px;
+        padding: 6px 16px 6px 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: fit-content;
+    }
+
+    .user-status {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        position: relative;
+    }
+
+    .user-status.online {
+        background: #10b981;
+    }
+
+    .user-status::after {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        border-radius: 50%;
+        border: 1px solid currentColor;
+        opacity: 0.4;
+        animation: pulse-ring 2s infinite;
+    }
+
+    @keyframes pulse-ring {
+        0% {
+            transform: scale(1);
+            opacity: 0.4;
+        }
+
+        100% {
+            transform: scale(2.5);
+            opacity: 0;
+        }
+    }
+
+    .user-role-badge {
+        font-size: 0.6rem;
+        font-weight: 700;
+        color: var(--sb-accent);
+        background: rgba(56, 189, 248, 0.1);
+        padding: 2px 6px;
+        border-radius: 4px;
+    }
+
+    .user-name-abbr {
+        color: var(--sb-text-bright);
+        font-weight: 600;
+        font-size: 0.75rem;
+    }
+
+    .sidebar-divider {
+        height: 1px;
+        background: var(--sb-border);
+        margin: 0 1.5rem 1rem;
+    }
+
+    /* SCROLLER */
+    .sidebar-scroller {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0 0.75rem 2rem;
+    }
+
+    .sidebar-scroller::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .sidebar-scroller::-webkit-scrollbar-thumb {
+        background: var(--sb-border);
+        border-radius: 10px;
+    }
+
+    /* NAV GROUPS */
+    .nav-group {
+        margin-bottom: 2rem;
+    }
+
+    .nav-group-header {
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #475569;
+        padding: 0 0.75rem 0.75rem;
+    }
+
+    .nav-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .nav-item {
+        margin-bottom: 4px;
+    }
+
+    .nav-link {
+        display: flex;
+        align-items: center;
+        padding: 10px 12px;
+        border-radius: 12px;
+        text-decoration: none;
+        color: var(--sb-text);
+        transition: var(--sb-transition);
+        position: relative;
+    }
+
+    .nav-link:hover {
+        color: var(--sb-text-bright);
+        background: var(--sb-hover-bg);
+    }
+
+    .nav-link.active {
+        color: var(--sb-accent);
+        background: var(--sb-active-bg);
+    }
+
+    .nav-link.active::before {
+        content: '';
+        position: absolute;
+        left: -12px;
+        top: 20%;
+        height: 60%;
+        width: 4px;
+        background: var(--sb-accent);
+        border-radius: 0 4px 4px 0;
+        box-shadow: 0 0 15px var(--sb-accent);
+    }
+
+    .icon-box {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        margin-right: 12px;
+        transition: var(--sb-transition);
+    }
+
+    .nav-link.active .icon-box {
+        color: var(--sb-accent);
+        transform: scale(1.1);
+    }
+
+    .link-label {
+        flex: 1;
+        font-size: 0.88rem;
+        font-weight: 500;
+    }
+
+    .link-badge {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--sb-border);
+        padding: 2px 8px;
+        border-radius: 6px;
+        font-size: 0.7rem;
+        font-weight: 600;
+    }
+
+    .link-badge.pulse {
+        background: rgba(56, 189, 248, 0.2);
+        border-color: var(--sb-accent);
+        color: var(--sb-accent);
+        animation: badge-pulse 2s infinite;
+    }
+
+    @keyframes badge-pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.4);
+        }
+
+        70% {
+            box-shadow: 0 0 0 10px rgba(56, 189, 248, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(56, 189, 248, 0);
+        }
+    }
+
+    .link-hint {
+        font-size: 0.65rem;
+        opacity: 0.4;
+        font-weight: 400;
+        padding-left: 8px;
+    }
+
+    /* SUB NAV */
+    .nav-item-sub {
+        padding-left: 44px;
+        margin-top: -4px;
+        margin-bottom: 8px;
+        position: relative;
+    }
+
+    .nav-item-sub::before {
+        content: '';
+        position: absolute;
+        left: 28px;
+        top: 0;
+        bottom: 10px;
+        width: 1px;
+        background: var(--sb-border);
+    }
+
+    .sub-nav-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .sub-nav-list li a {
+        display: block;
+        padding: 6px 0;
+        font-size: 0.8rem;
+        color: var(--sb-text);
+        text-decoration: none;
+        transition: var(--sb-transition);
+        position: relative;
+    }
+
+    .sub-nav-list li a::before {
+        content: '';
+        position: absolute;
+        left: -16px;
+        top: 50%;
+        width: 8px;
+        height: 1px;
+        background: var(--sb-border);
+    }
+
+    .sub-nav-list li a:hover,
+    .sub-nav-list li a.active {
+        color: var(--sb-accent);
+    }
+
+    /* FOOTER */
+    .sidebar-footer-integrity {
+        padding: 1.5rem;
+        background: rgba(0, 0, 0, 0.2);
+        border-top: 1px solid var(--sb-border);
+    }
+
+    .integrity-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--sb-border);
+        border-radius: 12px;
+        padding: 12px;
+    }
+
+    .integrity-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .integrity-title {
+        font-size: 0.6rem;
+        font-weight: 800;
+        letter-spacing: 1px;
+        color: #475569;
+    }
+
+    .integrity-status-text {
+        font-size: 0.65rem;
+        font-weight: 600;
+        color: #10b981;
+    }
+
+    .integrity-bar {
+        height: 4px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .integrity-progress {
+        height: 100%;
+        background: linear-gradient(90deg, #38bdf8 0%, #818cf8 100%);
+        box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+    }
+
+    /* COLLAPSED STATE (For future JS integration) */
+    .admin-sidebar.collapsed {
+        width: 80px;
+    }
+
+    .admin-sidebar.collapsed .brand-text,
+    .admin-sidebar.collapsed .link-label,
+    .admin-sidebar.collapsed .link-badge,
+    .admin-sidebar.collapsed .link-hint,
+    .admin-sidebar.collapsed .nav-group-header,
+    .admin-sidebar.collapsed .sidebar-user-context,
+    .admin-sidebar.collapsed .nav-item-sub,
+    .admin-sidebar.collapsed .integrity-card {
+        display: none;
+    }
+
+    .admin-sidebar.collapsed .sidebar-brand {
+        justify-content: center;
+        padding: 2rem 0;
+    }
+
+    .admin-sidebar.collapsed .nav-item {
+        display: flex;
+        justify-content: center;
+    }
+
+    .admin-sidebar.collapsed .icon-box {
+        margin-right: 0;
+    }
 </style>
+
+<script>
+    function toggleSidebarInternal() {
+        const sidebar = document.getElementById('mainSidebar');
+        sidebar.classList.toggle('collapsed');
+
+        // Update the main content margin
+        const main = document.querySelector('.admin-main');
+        if (sidebar.classList.contains('collapsed')) {
+            main.style.marginLeft = '80px';
+        } else {
+            main.style.marginLeft = '280px';
+        }
+    }
+</script>

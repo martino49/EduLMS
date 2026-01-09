@@ -1,0 +1,31 @@
+﻿
+--- Missing EJS Views Audit ---
+Γ¥î Found 12 unique missing views:
+
+- about
+  (Referenced in: app\routes\index.js)
+- admin/academic/grades
+  (Referenced in: app\controllers\users\adminController.js)
+- contact
+  (Referenced in: app\routes\index.js)
+- features
+  (Referenced in: app\routes\index.js)
+- finance/payments/manual-entry
+  (Referenced in: app\controllers\users\financeController.js)
+- finance/reports/generate
+  (Referenced in: app\controllers\users\financeController.js)
+- finance/reports/view
+  (Referenced in: app\controllers\users\financeController.js)
+- privacy
+  (Referenced in: app\routes\index.js)
+- student/assignments
+  (Referenced in: app\routes\student.js, app\controllers\users\studentController.js)
+- student/courses
+  (Referenced in: app\routes\student.js, app\controllers\users\studentController.js)
+- student/grades
+  (Referenced in: app\routes\student.js, app\controllers\users\studentController.js)
+- terms
+  (Referenced in: app\routes\index.js)
+
+-----------------------------
+

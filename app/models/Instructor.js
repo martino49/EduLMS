@@ -1,4 +1,4 @@
-const db = require('../../config/database');
+const { pool: db } = require('../../config/database');
 const User = require('./User');
 
 class Instructor {
@@ -30,7 +30,7 @@ class Instructor {
   // Get instructor courses with detailed analytics
   static async getCourses(instructorId, filters = {}, page = 1, limit = 10) {
     const offset = (page - 1) * limit;
-    
+
     let query = `
       SELECT 
         c.*,
@@ -46,7 +46,7 @@ class Instructor {
       LEFT JOIN grades g ON s.id = g.submission_id
       WHERE c.teacher_id = ?
     `;
-    
+
     const params = [instructorId];
 
     // Apply filters
@@ -152,7 +152,7 @@ class Instructor {
         ORDER BY a.due_date ASC
         LIMIT ? OFFSET ?
       `, [instructorId, limit, offset]),
-      
+
       db.query(`
         SELECT COUNT(DISTINCT a.id) as total
         FROM assignments a
@@ -435,7 +435,7 @@ class Instructor {
       generated_at: new Date(),
       total_students: studentPerformance.length,
       total_assignments: assignmentStats.length,
-      average_class_score: studentPerformance.length > 0 ? 
+      average_class_score: studentPerformance.length > 0 ?
         studentPerformance.reduce((sum, student) => sum + (student.average_score || 0), 0) / studentPerformance.length : 0
     };
   }

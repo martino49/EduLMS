@@ -2,19 +2,25 @@
     <div class="container">
         <div class="header-content">
             <div class="header-brand">
-                <img src="/images/logo.png" alt="EduLMS" class="logo">
-                <span class="brand-name">EduLMS</span>
+                <a href="/" class="text-decoration-none d-flex align-items-center gap-2">
+                    <img src="/img/logo.png" alt="EduLMS" class="logo">
+                    <span class="brand-name">EduLMS</span>
+                </a>
             </div>
-            
+
             <nav class="header-nav">
                 <div class="nav-items">
                     <% if (currentUser) { %>
                         <div class="user-menu">
                             <div class="user-info">
-                                <img src="<%= currentUser.avatar || '../../public/images/avatars/default.png' %>" 
-                                     alt="<%= currentUser.name %>" class="user-avatar">
-                                <span class="user-name"><%= currentUser.name %></span>
-                                <span class="user-role badge badge-info"><%= currentUser.role %></span>
+                                <img src="<%= currentUser.avatar || '../../public/images/avatars/default.png' %>"
+                                    alt="<%= currentUser.name %>" class="user-avatar">
+                                <span class="user-name">
+                                    <%= currentUser.name %>
+                                </span>
+                                <span class="user-role badge badge-info">
+                                    <%= currentUser.role %>
+                                </span>
                             </div>
                             <div class="dropdown-menu">
                                 <a href="/profile" class="dropdown-item">Profile</a>
@@ -23,10 +29,10 @@
                                 <a href="/logout" class="dropdown-item">Logout</a>
                             </div>
                         </div>
-                    <% } else { %>
-                        <a href="/login" class="btn btn-secondary">Login</a>
-                        <a href="/register" class="btn btn-primary">Register</a>
-                    <% } %>
+                        <% } else { %>
+                            <a href="/login" class="btn btn-secondary">Login</a>
+                            <a href="/register" class="btn btn-primary">Register</a>
+                            <% } %>
                 </div>
             </nav>
         </div>
