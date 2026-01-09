@@ -65,10 +65,6 @@ app.use(helmet({
   crossOriginEmbedderPolicy: false
 }));
 
-const localsMiddleware = require('./app/middleware/locals');
-
-// After session middleware but before routes
-app.use(localsMiddleware);
 
 app.use(compression());
 
@@ -170,42 +166,9 @@ app.use(passport.session());
 // Flash messages
 app.use(flash());
 
-// Global variables middleware
-app.use((req, res, next) => {
-  res.locals.success_msg = req.flash('success_msg');
-  res.locals.error_msg = req.flash('error_msg');
-  res.locals.error = req.flash('error');
-  res.locals.user = req.user || null;
-  res.locals.currentPath = req.path;
-  res.locals.app_name = process.env.SITE_NAME || 'EduLMS';
-  res.locals.currentYear = new Date().getFullYear();
-  res.locals.app_version = process.env.APP_VERSION || '1.0.0';
-  res.locals.app_env = process.env.NODE_ENV || 'development';
-
-  // Set layout based on user role
-  if (req.user) {
-    switch (req.user.role_name) {
-      case 'admin':
-        res.locals.layout = 'layouts/admin-layout';
-        break;
-      case 'student':
-        res.locals.layout = 'layouts/student-layout';
-        break;
-      case 'instructor':
-        res.locals.layout = 'layouts/instructor-layout';
-        break;
-      case 'finance_officer':
-        res.locals.layout = 'layouts/finance-layout';
-        break;
-      default:
-        res.locals.layout = 'layouts/layout';
-    }
-  } else {
-    res.locals.layout = 'layouts/layout';
-  }
-
-  next();
-});
+// Global variables and layout selection middleware
+const localsMiddleware = require('./app/middleware/locals');
+app.use(localsMiddleware);
 
 // Database health check endpoint (optional)
 app.get('/health', async (req, res) => {

@@ -18,12 +18,12 @@ try {
 let authController, passwordController;
 try {
     authController = require('../controllers/auth/authController');
-    
+
     // Validate that required methods exist
     if (!authController.register || !authController.login || !authController.logout) {
         throw new Error('Auth controller methods are missing');
     }
-    
+
     console.log('✅ Auth controller loaded successfully');
 } catch (error) {
     console.error('❌ Error loading auth controller:', error.message);
@@ -49,12 +49,12 @@ try {
 
 try {
     passwordController = require('../controllers/auth/passwordController');
-    
+
     // Validate that required methods exist
     if (!passwordController.forgotPassword || !passwordController.resetPassword) {
         throw new Error('Password controller methods are missing');
     }
-    
+
     console.log('✅ Password controller loaded successfully');
 } catch (error) {
     console.error('❌ Error loading password controller:', error.message);
@@ -76,7 +76,7 @@ try {
 let validateRegistration, validateLogin;
 try {
     const validators = require('../validators/userValidators');
-    
+
     // Check if validators are arrays
     if (Array.isArray(validators.validateRegistration)) {
         validateRegistration = validators.validateRegistration;
@@ -84,62 +84,62 @@ try {
     } else {
         throw new Error('validateRegistration is not an array');
     }
-    
+
     if (Array.isArray(validators.validateLogin)) {
         validateLogin = validators.validateLogin;
         console.log('✅ Login validators loaded as array');
     } else {
         throw new Error('validateLogin is not an array');
     }
-    
+
 } catch (error) {
     console.error('❌ Error loading validators:', error.message);
-    
+
     // SIMPLIFIED Fallback validators for basic registration
     validateRegistration = [
         (req, res, next) => {
             console.log('⚠️  Using simplified registration validation');
             const { first_name, last_name, email, password, confirm_password } = req.body;
             const errors = [];
-            
+
             if (!first_name?.trim()) errors.push('First name is required');
             if (!last_name?.trim()) errors.push('Last name is required');
             if (!email?.trim()) errors.push('Email is required');
             if (!password) errors.push('Password is required');
             if (!confirm_password) errors.push('Confirm password is required');
-            
+
             if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
                 errors.push('Please provide a valid email address');
             }
-            
+
             if (password && password.length < 8) {
                 errors.push('Password must be at least 8 characters long');
             }
-            
+
             if (password && confirm_password && password !== confirm_password) {
                 errors.push('Passwords do not match');
             }
-            
+
             if (errors.length > 0) {
                 req.flash('error_msg', errors[0]);
                 req.flash('oldInput', req.body);
                 return res.redirect('back');
             }
-            
+
             next();
         }
     ];
-    
+
     validateLogin = [
         (req, res, next) => {
             console.log('⚠️  Using fallback login validation');
             const { email, password } = req.body;
-            
+
             if (!email?.trim() || !password) {
                 req.flash('error_msg', 'Email and password are required');
                 return res.redirect('back');
             }
-            
+
             next();
         }
     ];
@@ -156,7 +156,7 @@ const safeHandler = (handler, routeName) => {
         } catch (error) {
             console.error(`❌ Route handler error for ${routeName}:`, error);
             req.flash('error_msg', 'Something went wrong. Please try again.');
-            
+
             // Redirect to appropriate page based on route
             if (routeName.includes('login')) {
                 return res.redirect('/auth/login');
@@ -175,8 +175,8 @@ const applyValidators = (validatorsArray, validatorName) => {
         console.error(`❌ ${validatorName} is not an array, using fallback`);
         return [safeHandler((req, res, next) => next(), `${validatorName}_fallback`)];
     }
-    
-    return validatorsArray.map((validator, index) => 
+
+    return validatorsArray.map((validator, index) =>
         safeHandler(validator, `${validatorName}[${index}]`)
     );
 };
@@ -184,57 +184,47 @@ const applyValidators = (validatorsArray, validatorName) => {
 // ==================== AUTH ROUTES ====================
 
 // GET /auth/login
-router.get('/login', 
-    safeHandler(ensureGuest, 'ensureGuest'), 
+router.get('/login',
+    safeHandler(ensureGuest, 'ensureGuest'),
     (req, res) => {
         res.render('auth/login', {
-            title: 'Login - EduLMS',
-            error: req.flash('error'),
-            error_msg: req.flash('error_msg'),
-            success_msg: req.flash('success_msg'),
-            oldInput: req.flash('oldInput')[0] || {},
-            layout: 'layouts/layout'
+            title: 'Login - EduLMS'
         });
     }
 );
 
 // GET /auth/register
-router.get('/register', 
-    safeHandler(ensureGuest, 'ensureGuest'), 
+router.get('/register',
+    safeHandler(ensureGuest, 'ensureGuest'),
     (req, res) => {
         res.render('auth/register', {
-            title: 'Register - EduLMS',
-            error: req.flash('error'),
-            error_msg: req.flash('error_msg'),
-            success_msg: req.flash('success_msg'),
-            oldInput: req.flash('oldInput')[0] || {},
-            layout: 'layouts/layout'
+            title: 'Register - EduLMS'
         });
     }
 );
 
 // POST /auth/register - SIMPLIFIED: No role selection needed
-router.post('/register', 
+router.post('/register',
     ...applyValidators(validateRegistration, 'validateRegistration'),
     safeHandler(authController.register, 'authController.register')
 );
 
 // POST /auth/login
-router.post('/login', 
+router.post('/login',
     ...applyValidators(validateLogin, 'validateLogin'),
     safeHandler(authController.login, 'authController.login')
 );
 
 // GET /auth/logout
-router.get('/logout', 
+router.get('/logout',
     safeHandler(authController.logout, 'authController.logout')
 );
 
 // ==================== PASSWORD ROUTES ====================
 
 // GET /auth/forgot-password
-router.get('/forgot-password', 
-    safeHandler(ensureGuest, 'ensureGuest'), 
+router.get('/forgot-password',
+    safeHandler(ensureGuest, 'ensureGuest'),
     (req, res) => {
         res.render('auth/forgot-password', {
             title: 'Forgot Password - EduLMS',
@@ -246,13 +236,13 @@ router.get('/forgot-password',
 );
 
 // POST /auth/forgot-password
-router.post('/forgot-password', 
+router.post('/forgot-password',
     safeHandler(passwordController.forgotPassword, 'passwordController.forgotPassword')
 );
 
 // GET /auth/reset-password
-router.get('/reset-password', 
-    safeHandler(ensureGuest, 'ensureGuest'), 
+router.get('/reset-password',
+    safeHandler(ensureGuest, 'ensureGuest'),
     (req, res) => {
         const { token } = req.query;
         if (!token) {
@@ -270,15 +260,15 @@ router.get('/reset-password',
 );
 
 // POST /auth/reset-password
-router.post('/reset-password', 
+router.post('/reset-password',
     safeHandler(passwordController.resetPassword, 'passwordController.resetPassword')
 );
 
 // ==================== EMAIL VERIFICATION ROUTES ====================
 
 // GET /auth/verify-email
-router.get('/verify-email', 
-    safeHandler(ensureGuest, 'ensureGuest'), 
+router.get('/verify-email',
+    safeHandler(ensureGuest, 'ensureGuest'),
     (req, res) => {
         const { token } = req.query;
         res.render('auth/verify-email', {

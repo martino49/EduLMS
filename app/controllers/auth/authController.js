@@ -6,20 +6,14 @@ const authController = {
   // Show login page
   showLogin: (req, res) => {
     res.render('auth/login', {
-      title: 'Login - EduLMS',
-      error_msg: req.flash('error_msg'),
-      success_msg: req.flash('success_msg'),
-      oldInput: req.flash('oldInput')[0] || {}
+      title: 'Login - EduLMS'
     });
   },
 
   // Show register page
   showRegister: (req, res) => {
     res.render('auth/register', {
-      title: 'Register - EduLMS',
-      error_msg: req.flash('error_msg'),
-      success_msg: req.flash('success_msg'),
-      oldInput: req.flash('oldInput')[0] || {}
+      title: 'Register - EduLMS'
     });
   },
 
@@ -28,8 +22,8 @@ const authController = {
     try {
       const { first_name, last_name, email, password, phone } = req.body;
 
-      console.log('🔍 Registration attempt:', { 
-        first_name, last_name, email, 
+      console.log('🔍 Registration attempt:', {
+        first_name, last_name, email,
         phone: phone || 'not provided',
         password_length: password ? password.length : 0
       });
@@ -69,7 +63,7 @@ const authController = {
       console.log('✅ User created successfully with ID:', userId);
 
       console.log('🎉 Registration completed successfully!');
-      
+
       req.flash('success_msg', 'Registration successful! You can now login.');
       res.redirect('/auth/login');
 
@@ -84,7 +78,7 @@ const authController = {
   // Handle user login (Passport handles the password comparison)
   login: (req, res, next) => {
     console.log('🔐 Login attempt for:', req.body.email);
-    
+
     passport.authenticate('local', (err, user, info) => {
       if (err) {
         console.error('❌ Passport authentication error:', err);
@@ -109,7 +103,7 @@ const authController = {
 
         console.log('✅ User logged in successfully:', user.email);
         console.log('👤 User role:', user.role_name);
-        
+
         // Redirect based on role
         const redirectPath = getRedirectPath(user.role_id);
         req.flash('success_msg', `Welcome back, ${user.name || user.email}!`);
@@ -135,7 +129,7 @@ const authController = {
     try {
       const { token } = req.params;
       console.log('Email verification attempt with token:', token);
-      
+
       // Auto-verify for development
       req.flash('success_msg', 'Email verified successfully! You can now login.');
       res.redirect('/auth/login');
@@ -152,10 +146,10 @@ const authController = {
     try {
       const { email } = req.body;
       console.log('Resend verification requested for:', email);
-      
+
       // Simulate email sending
       console.log('📧 Verification email would be sent to:', email);
-      
+
       req.flash('success_msg', 'Verification email sent! Please check your inbox.');
       res.redirect('/auth/login');
 

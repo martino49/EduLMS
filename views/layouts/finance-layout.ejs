@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
-        <%= title || 'Finance Portal - EduLMS' %>
+        <%= typeof title !=='undefined' ? title : 'Finance Portal - EduLMS' %>
     </title>
 
     <!-- Bootstrap CSS -->
@@ -64,7 +64,7 @@
             flex: 1;
         }
     </style>
-    <% if (pageStyles) { %>
+    <% if (typeof pageStyles !=='undefined' && pageStyles) { %>
         <% pageStyles.forEach(style=> { %>
             <link rel="stylesheet" href="<%= style %>">
             <% }); %>
@@ -89,12 +89,13 @@
                             <div class="row align-items-center">
                                 <div class="col">
                                     <h1 class="page-title">
-                                        <%= pageTitle || title %>
+                                        <%= (typeof pageTitle !=='undefined' && pageTitle) ? pageTitle : (typeof title
+                                            !=='undefined' ? title : '' ) %>
                                     </h1>
                                     <nav aria-label="breadcrumb">
                                         <ol class="breadcrumb">
                                             <li class="breadcrumb-item"><a href="/finance/dashboard">Dashboard</a></li>
-                                            <% if (breadcrumbs) { %>
+                                            <% if (typeof breadcrumbs !=='undefined' && breadcrumbs) { %>
                                                 <% breadcrumbs.forEach(crumb=> { %>
                                                     <% if (crumb.active) { %>
                                                         <li class="breadcrumb-item active">
@@ -111,7 +112,7 @@
                                     </nav>
                                 </div>
                                 <div class="col-auto">
-                                    <% if (headerActions) { %>
+                                    <% if (typeof headerActions !=='undefined' && headerActions) { %>
                                         <div class="header-actions">
                                             <% headerActions.forEach(action=> { %>
                                                 <a href="<%= action.url %>"
@@ -153,7 +154,7 @@
     <script src="/js/charts.js"></script>
 
     <!-- Page-specific JS -->
-    <% if (pageScripts) { %>
+    <% if (typeof pageScripts !=='undefined' && pageScripts) { %>
         <% pageScripts.forEach(script=> { %>
             <script src="<%= script %>"></script>
             <% }); %>
