@@ -9,19 +9,19 @@ class User {
     let connection;
     try {
       console.log('📝 Creating user with data:', userData);
-      
+
       // Validate required fields
       if (!userData.name || !userData.email || !userData.password || !userData.role_id) {
         throw new Error('Missing required fields: name, email, password, or role_id');
       }
-      
+
       // Hash password
       const saltRounds = parseInt(process.env.BCRYPT_ROUNDS) || 12;
       const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
 
       // Generate role-based ID
       const roleBasedId = await IDGeneratorService.generateRoleBasedID(userData.role_id);
-      
+
       // Prepare user data with auto-generated IDs
       const userInsertData = {
         name: userData.name,
@@ -64,7 +64,7 @@ class User {
       const fields = [];
       const placeholders = [];
       const values = [];
-      
+
       Object.keys(userInsertData).forEach(key => {
         if (userInsertData[key] !== undefined && userInsertData[key] !== null) {
           fields.push(key);
@@ -74,16 +74,16 @@ class User {
       });
 
       const sql = `INSERT INTO users (${fields.join(', ')}) VALUES (${placeholders.join(', ')})`;
-      
+
       console.log('📝 Executing SQL:', sql);
       console.log('📝 With values:', values.map(v => typeof v === 'string' ? v.substring(0, 10) + '...' : v));
-      
+
       // FIXED: Use pool.query() instead of db.execute()
       const [result] = await pool.query(sql, values);
-      
+
       console.log('✅ User created successfully with ID:', result.insertId);
       return result.insertId;
-      
+
     } catch (error) {
       console.error('❌ Error creating user:', error);
       throw error;
@@ -201,9 +201,9 @@ class User {
       if (filters.search) {
         whereConditions.push('(u.name LIKE ? OR u.email LIKE ? OR u.student_id LIKE ? OR u.teacher_id LIKE ? OR u.employee_id LIKE ?)');
         params.push(
-          `%${filters.search}%`, 
-          `%${filters.search}%`, 
-          `%${filters.search}%`, 
+          `%${filters.search}%`,
+          `%${filters.search}%`,
+          `%${filters.search}%`,
           `%${filters.search}%`,
           `%${filters.search}%`
         );
@@ -226,7 +226,7 @@ class User {
 
       // FIXED: Use pool.query() for both queries
       const [users] = await pool.query(query, params);
-      
+
       // For count query, remove limit/offset parameters
       const countParams = params.slice(0, -2);
       const [countResult] = await pool.query(countQuery, countParams);
@@ -283,7 +283,7 @@ class User {
     try {
       const saltRounds = parseInt(process.env.BCRYPT_ROUNDS) || 12;
       const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
-      
+
       // FIXED: Use pool.query()
       await pool.query(
         'UPDATE users SET password = ?, updated_at = NOW() WHERE id = ?',
@@ -329,7 +329,7 @@ class User {
         FROM users 
         WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY) AND is_active = 1
       `);
-      
+
       return {
         byRole: stats,
         total: totalResult[0].total,
@@ -405,8 +405,8 @@ class User {
   // Simple user creation for registration (without complex ID generation)
   static async createSimple(userData) {
     try {
-      const { first_name, last_name, email, phone, password, role = 'student' } = userData;
-      
+      const { name, email, phone, password, role = 'student' } = userData;
+
       // Hash password
       const saltRounds = parseInt(process.env.BCRYPT_ROUNDS) || 12;
       const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -415,11 +415,11 @@ class User {
       const roleId = await this.getRoleId(role);
 
       const sql = `
-        INSERT INTO users (first_name, last_name, email, phone, password, role_id, is_active, created_at) 
-        VALUES (?, ?, ?, ?, ?, ?, 1, NOW())
+        INSERT INTO users (name, email, phone, password, role_id, is_active, created_at) 
+        VALUES (?, ?, ?, ?, ?, 1, NOW())
       `;
-      
-      const [result] = await pool.query(sql, [first_name, last_name, email, phone, hashedPassword, roleId]);
+
+      const [result] = await pool.query(sql, [name, email, phone, hashedPassword, roleId]);
       return result.insertId;
     } catch (error) {
       console.error('Error in createSimple:', error);

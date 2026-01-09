@@ -1,11 +1,12 @@
 const { ROLES } = require('../../config/constants');
+const { pool } = require('../../config/database');
 
 // Check if user is authenticated
 const isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
   }
-  
+
   req.flash('error_msg', 'Please log in to access this page');
   res.redirect('/auth/login');
 };
@@ -15,7 +16,7 @@ const isNotAuthenticated = (req, res, next) => {
   if (!req.isAuthenticated()) {
     return next();
   }
-  
+
   // Redirect to appropriate dashboard based on role
   let redirectUrl = '/dashboard';
   switch (req.user.role_name) {
@@ -32,7 +33,7 @@ const isNotAuthenticated = (req, res, next) => {
       redirectUrl = '/finance/dashboard';
       break;
   }
-  
+
   res.redirect(redirectUrl);
 };
 
@@ -146,7 +147,6 @@ const canManageCourse = async (req, res, next) => {
       return res.redirect('/auth/login');
     }
 
-    const db = require('../../config/database');
     const courseId = req.params.courseId || req.body.course_id;
 
     if (!courseId) {
@@ -160,15 +160,15 @@ const canManageCourse = async (req, res, next) => {
 
     // Check if instructor owns the course
     if (req.user.role_name === ROLES.INSTRUCTOR) {
-      const courses = await db.query(
+      const [courses] = await pool.query(
         'SELECT id FROM courses WHERE id = ? AND instructor_id = ?',
         [courseId, req.user.id]
       );
-      
+
       if (courses.length > 0) {
         return next();
       }
-      
+
       req.flash('error_msg', 'You can only manage your own courses');
       return res.redirect('/instructor/dashboard');
     }
@@ -190,7 +190,6 @@ const isEnrolledInCourse = async (req, res, next) => {
       return res.redirect('/auth/login');
     }
 
-    const db = require('../../config/database');
     const courseId = req.params.courseId || req.body.course_id;
 
     if (!courseId) {
@@ -205,15 +204,15 @@ const isEnrolledInCourse = async (req, res, next) => {
 
     // Check if student is enrolled
     if (req.user.role_name === ROLES.STUDENT) {
-      const enrollments = await db.query(
+      const [enrollments] = await pool.query(
         'SELECT id FROM enrollments WHERE course_id = ? AND student_id = ? AND status = "active"',
         [courseId, req.user.id]
       );
-      
+
       if (enrollments.length > 0) {
         return next();
       }
-      
+
       req.flash('error_msg', 'You are not enrolled in this course');
       return res.redirect('/student/dashboard');
     }
@@ -232,7 +231,7 @@ const apiAuth = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
   }
-  
+
   res.status(401).json({
     success: false,
     message: 'Authentication required'
@@ -265,10 +264,9 @@ const logActivity = (action, tableName) => {
   return async (req, res, next) => {
     try {
       if (req.user && req.method !== 'GET') {
-        const db = require('../../config/database');
         const recordId = req.params.id || req.body.id || null;
-        
-        await db.query(
+
+        await pool.query(
           `INSERT INTO audit_logs (user_id, action, table_name, record_id, ip_address, user_agent, details) 
            VALUES (?, ?, ?, ?, ?, ?, ?)`,
           [
