@@ -1,0 +1,171 @@
+ReferenceError: C:\Users\ADMIN\Documents\prooooojects\EduLMS\views\layouts\admin-layout.ejs:148
+    146| <body>
+
+    147|     <div class="admin-layout">
+
+ >> 148|         <%- include('../partials/admin-sidebar', { currentPage, currentUser }) %>
+
+    149|         
+
+    150|         <div class="admin-main">
+
+    151|             <%- include('../partials/admin-header', { currentUser }) %>
+
+
+currentPage is not defined
+    at eval ("C:\\Users\\ADMIN\\Documents\\prooooojects\\EduLMS\\views\\layouts\\admin-layout.ejs":15:56)
+    at admin-layout (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile [as engine] (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express\lib\response.js:1049:7)
+    at C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express-ejs-layouts\lib\express-layouts.js:113:20
+    at tryHandleCache (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\ejs\lib\ejs.js:280:5)
+    at exports.renderFile [as engine] (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express\lib\response.js:1049:7)
+    at res.render (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express-ejs-layouts\lib\express-layouts.js:77:18)
+
+
+    ReferenceError: C:\Users\ADMIN\Documents\prooooojects\EduLMS\views\layouts\admin-layout.ejs:148
+    146| <body>
+
+    147|     <div class="admin-layout">
+
+ >> 148|         <%- include('../partials/admin-sidebar', { currentPage, currentUser }) %>
+
+    149|         
+
+    150|         <div class="admin-main">
+
+    151|             <%- include('../partials/admin-header', { currentUser }) %>
+
+
+currentPage is not defined
+    at eval ("C:\\Users\\ADMIN\\Documents\\prooooojects\\EduLMS\\views\\layouts\\admin-layout.ejs":15:56)
+    at admin-layout (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile [as engine] (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express\lib\response.js:1049:7)
+    at C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express-ejs-layouts\lib\express-layouts.js:113:20
+    at tryHandleCache (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\ejs\lib\ejs.js:280:5)
+    at exports.renderFile [as engine] (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express\lib\response.js:1049:7)
+    at res.render (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express-ejs-layouts\lib\express-layouts.js:77:18)
+
+    
+Course	Instructor	Department	Enrollment	Status	Fee	Actions
+EN
+ENG102 • 3 credits
+Jane Instructor	<span class="text-muted">N/A</span>	
+42/50
+Inactive	KES 0	
+CS
+CS101 • 3 credits
+Jane Instructor	<span class="text-muted">N/A</span>	
+42/50
+Inactive	KES 0	
+MA
+MATH201 • 3 credits
+Jane Instructor	<span class="text-muted">N/A</span>
+
+this page for admin has nothing to show exept footer and navigation (http://localhost:3000/admin/finance/payments)
+
+fix this page it has double navigation bar on top (
+Fee Structure
+Welcome, Admin
+Admin
+
+
+Fee Structure
+Welcome, Admin
+Admin
+
+EduLMS
+Admin Panel
+
+ADMIN
+MA
+📊 Overview
+Dashboard
+Overview
+👥 People & Content
+Users
+45
+Students
+Instructors
+Courses
+12
+💰 Finance
+Payments
+24
+Fee Structure
+⚙️ System
+Settings
+Activity Logs
+System Status
+All Good ✓
+EduLMS
+EduLMS
+Main Admin
+Main Admin
+admin
+Fee Structure Management
+Name	Type	Amount	Academic Year	Semester	Due Date	Status	Created By	Actions
+Identity Card
+KES 200	2024/2025	Semester 1	N/A	Active	Main Admin	
+Tuition Fee
+KES 3,000	2024/2025	Semester 1	N/A	Active	Main Admin	
+Library Fee
+KES 500	2024/2025	Semester 1	N/A	Active	Main Admin	
+)
+
+audit log has nothing to show also
+
+remove the numbers o the admin sidebar like one user it has a 45 for what
+
+You do not have permission to access this resource
+EduLMS
+EduLMS
+John Student
+John Student
+500
+Error
+An unexpected error occurred
+
+Error Details (Development):
+ReferenceError: C:\Users\ADMIN\Documents\prooooojects\EduLMS\views\layouts\student-layout.ejs:61
+    59|         }
+    60|     </style>
+ >> 61|     <% if (pageStyles) { %>
+    62|         <% pageStyles.forEach(style=> { %>
+    63|             <link rel="stylesheet" href="<%= style %>">
+    64|             <% }); %>
+
+pageStyles is not defined
+    at eval ("C:\\Users\\ADMIN\\Documents\\prooooojects\\EduLMS\\views\\layouts\\student-layout.ejs":15:8)
+    at student-layout (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\ejs\lib\ejs.js:703:17)
+    at tryHandleCache (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\ejs\lib\ejs.js:274:36)
+    at exports.renderFile [as engine] (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express\lib\response.js:1049:7)
+    at C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express-ejs-layouts\lib\express-layouts.js:113:20
+    at tryHandleCache (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\ejs\lib\ejs.js:280:5)
+    at exports.renderFile [as engine] (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\ejs\lib\ejs.js:491:10)
+    at View.render (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express\lib\application.js:657:10)
+    at app.render (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express\lib\application.js:609:3)
+    at ServerResponse.render (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express\lib\response.js:1049:7)
+    at res.render (C:\Users\ADMIN\Documents\prooooojects\EduLMS\node_modules\express-ejs

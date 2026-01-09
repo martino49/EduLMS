@@ -1,0 +1,198 @@
+<%- include('../../../layouts/instructor-layout', { title: title, pageTitle: pageTitle, currentPage: 'courses' ,
+    breadcrumbs: breadcrumbs }) %>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3 border-bottom">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 text-primary fw-bold text-uppercase small">Modify Course: <%= course.course_code
+                                %>
+                        </h5>
+                        <span class="badge bg-<%= course.status === 'active' ? 'success' : 'warning' %> text-uppercase">
+                            <%= course.status %>
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <form action="/instructor/courses/<%= course.id %>/edit" method="POST" id="courseEditForm">
+                        <div class="row g-4">
+                            <!-- Primary Info -->
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Course Title</label>
+                                    <input type="text" name="title" class="form-control form-control-lg"
+                                        value="<%= course.title %>" required minlength="5" maxlength="200">
+                                    <div class="form-text">Update the professional title.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Description</label>
+                                    <textarea name="description" class="form-control" rows="5" required minlength="10"
+                                        maxlength="2000"><%= course.description %></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Side Specs -->
+                            <div class="col-md-4">
+                                <div class="mb-3 p-3 bg-light rounded border">
+                                    <label class="form-label fw-bold">Course Code</label>
+                                    <input type="text" name="code" class="form-control"
+                                        value="<%= course.course_code %>" required pattern="^[A-Z0-9\-]+$">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Department</label>
+                                    <select name="department" class="form-select" required>
+                                        <option value="Computer Science" <%=course.department==='Computer Science'
+                                            ? 'selected' : '' %>>Computer Science</option>
+                                        <option value="Mathematics" <%=course.department==='Mathematics' ? 'selected'
+                                            : '' %>>Mathematics</option>
+                                        <option value="Physics" <%=course.department==='Physics' ? 'selected' : '' %>
+                                            >Physics</option>
+                                        <option value="Engineering" <%=course.department==='Engineering' ? 'selected'
+                                            : '' %>>Engineering</option>
+                                        <option value="Business" <%=course.department==='Business' ? 'selected' : '' %>
+                                            >Business</option>
+                                    </select>
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <label class="form-label fw-bold">Credits</label>
+                                        <input type="number" name="credits" class="form-control"
+                                            value="<%= course.credits %>" step="0.5" min="0.5" max="10" required>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label fw-bold">Max Capacity</label>
+                                        <input type="number" name="max_students" class="form-control"
+                                            value="<%= course.max_students || 50 %>" min="1" max="500" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <hr>
+                            </div>
+
+                            <!-- Schedule & Logistics -->
+                            <div class="col-md-6">
+                                <h6 class="fw-bold mb-3 text-uppercase small text-muted">Academic Schedule</h6>
+                                <div class="row g-3">
+                                    <div class="col-6">
+                                        <label class="form-label fw-bold">Start Date</label>
+                                        <input type="date" name="start_date" class="form-control"
+                                            value="<%= course.start_date ? new Date(course.start_date).toISOString().split('T')[0] : '' %>"
+                                            required>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label fw-bold">End Date</label>
+                                        <input type="date" name="end_date" class="form-control"
+                                            value="<%= course.end_date ? new Date(course.end_date).toISOString().split('T')[0] : '' %>"
+                                            required>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label fw-bold">Academic Year</label>
+                                        <input type="text" name="academic_year" class="form-control"
+                                            value="<%= course.academic_year || '' %>" placeholder="2024/2025" required>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label fw-bold">Semester</label>
+                                        <select name="semester" class="form-select" required>
+                                            <option value="1" <%=course.semester=='1' ? 'selected' : '' %>>Semester 1
+                                            </option>
+                                            <option value="2" <%=course.semester=='2' ? 'selected' : '' %>>Semester 2
+                                            </option>
+                                            <option value="3" <%=course.semester=='3' ? 'selected' : '' %>>Summer
+                                                Session</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <h6 class="fw-bold mb-3 text-uppercase small text-muted">Financial & Metadata</h6>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Fee Amount (KSh)</label>
+                                    <input type="number" name="fee_amount" class="form-control"
+                                        value="<%= course.fee_amount %>" step="0.01" min="0" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Duration (Weeks)</label>
+                                    <input type="number" name="duration" class="form-control"
+                                        value="<%= course.duration || 12 %>" min="1" max="52" required>
+                                </div>
+                            </div>
+
+                            <!-- Rich Content Sections -->
+                            <div class="col-12">
+                                <ul class="nav nav-tabs" id="courseDetails" role="tablist">
+                                    <li class="nav-item">
+                                        <button class="nav-link active fw-bold" data-bs-toggle="tab"
+                                            data-bs-target="#syllabus">Syllabus</button>
+                                    </li>
+                                    <li class="nav-item">
+                                        <button class="nav-link fw-bold" data-bs-toggle="tab"
+                                            data-bs-target="#requirements">Requirements</button>
+                                    </li>
+                                    <li class="nav-item">
+                                        <button class="nav-link fw-bold" data-bs-toggle="tab"
+                                            data-bs-target="#outcomes">Learning Outcomes</button>
+                                    </li>
+                                </ul>
+                                <div class="tab-content p-3 border border-top-0 rounded-bottom">
+                                    <div class="tab-pane fade show active" id="syllabus">
+                                        <textarea name="syllabus" class="form-control"
+                                            rows="4"><%= course.syllabus %></textarea>
+                                    </div>
+                                    <div class="tab-pane fade" id="requirements">
+                                        <textarea name="requirements" class="form-control"
+                                            rows="4"><%= course.requirements %></textarea>
+                                    </div>
+                                    <div class="tab-pane fade" id="outcomes">
+                                        <textarea name="learning_outcomes" class="form-control"
+                                            rows="4"><%= course.learning_outcomes %></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 pt-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                                        data-bs-target="#deleteModal">
+                                        <i class="fas fa-trash me-2"></i>Delete Course
+                                    </button>
+                                    <div class="gap-2 d-flex">
+                                        <a href="/instructor/courses/<%= course.id %>"
+                                            class="btn btn-light border px-4">Cancel</a>
+                                        <button type="submit" class="btn btn-primary px-5 fw-bold">Save Changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">Confirm Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete <strong>
+                            <%= course.title %>
+                        </strong>? This action cannot be undone and will remove all associated materials and
+                        assignments.</p>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancel</button>
+                    <form action="/instructor/courses/<%= course.id %>?_method=DELETE" method="POST">
+                        <button type="submit" class="btn btn-danger px-4">Delete Permanently</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>

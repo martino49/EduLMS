@@ -47,6 +47,7 @@ router.post('/submissions/bulk-grade', instructorController.bulkGradeSubmissions
 router.get('/submissions/:submissionId/download', instructorController.downloadSubmission);
 
 // Grade Management
+router.get('/gradebook', instructorController.showGradebook);
 router.get('/grades/manage', instructorController.manageGrades);
 router.get('/grades/entry', instructorController.showGradeEntry);
 router.post('/grades/entry', instructorController.enterGrade);
@@ -72,6 +73,7 @@ router.post('/notifications/create', instructorController.createNotification);
 router.get('/notifications/:notificationId', instructorController.viewNotification);
 
 // Analytics and Reports
+router.get('/analytics', instructorController.showAnalytics);
 router.get('/analytics/courses', instructorController.courseAnalytics);
 router.get('/analytics/students', instructorController.studentAnalytics);
 router.get('/analytics/performance', instructorController.performanceAnalytics);

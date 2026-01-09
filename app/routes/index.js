@@ -134,4 +134,38 @@ router.get('/dashboard', isAuthenticated, (req, res) => {
   }
 });
 
+// Profile redirect
+router.get('/profile', isAuthenticated, (req, res) => {
+  switch (req.user.role_name) {
+    case 'admin':
+      res.redirect('/admin/profile');
+      break;
+    case 'instructor':
+      res.redirect('/instructor/profile');
+      break;
+    case 'student':
+      res.redirect('/student/profile');
+      break;
+    default:
+      res.redirect('/dashboard');
+  }
+});
+
+// Settings redirect
+router.get('/settings', isAuthenticated, (req, res) => {
+  switch (req.user.role_name) {
+    case 'admin':
+      res.redirect('/admin/settings');
+      break;
+    case 'instructor':
+      res.redirect('/instructor/profile/edit'); // Use profile edit as settings for now if settings doesn't exist
+      break;
+    case 'student':
+      res.redirect('/student/profile/edit');
+      break;
+    default:
+      res.redirect('/dashboard');
+  }
+});
+
 module.exports = router;

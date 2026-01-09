@@ -1,55 +1,332 @@
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8 text-center">
-            <h1 class="display-4 mb-4">Welcome to <%= app_name %></h1>
-            <p class="lead mb-4">A modern Learning Management System for educational institutions</p>
-            
-            <% if (!user) { %>
-                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                    <a href="/auth/register" class="btn btn-primary btn-lg px-4 gap-3">
-                        <i class="fas fa-user-plus"></i> Get Started
-                    </a>
-                    <a href="/auth/login" class="btn btn-outline-secondary btn-lg px-4">
-                        <i class="fas fa-sign-in-alt"></i> Login
-                    </a>
-                </div>
-            <% } else { %>
-                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                    <a href="/dashboard" class="btn btn-primary btn-lg px-4 gap-3">
-                        <i class="fas fa-tachometer-alt"></i> Go to Dashboard
-                    </a>
-                </div>
-            <% } %>
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, hsl(220, 85%, 55%) 0%, hsl(220, 85%, 45%) 100%);
+        color: white;
+        padding: 6rem 0;
+        margin-bottom: 4rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="2" fill="white" opacity="0.1"/></svg>');
+        opacity: 0.3;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .feature-card {
+        transition: all 0.3s var(--ease-squish);
+        height: 100%;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-8px);
+    }
+
+    .feature-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin: 0 auto 1.5rem;
+    }
+
+    .stats-section {
+        background: var(--surface-2);
+        padding: 3rem 0;
+        margin: 4rem 0;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 3rem;
+        font-weight: 700;
+        color: var(--primary);
+        font-family: 'Outfit', sans-serif;
+    }
+
+    .cta-section {
+        background: linear-gradient(135deg, var(--primary-light) 0%, var(--secondary-light) 100%);
+        padding: 4rem 0;
+        margin: 4rem 0;
+        border-radius: var(--radius-lg);
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container hero-content">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0 animate-fade-in">
+                <h1 class="display-3 fw-bold mb-4">Learn Without Limits</h1>
+                <p class="lead mb-4 opacity-90">
+                    Join thousands of students already transforming their future with <%= app_name %>.
+                        Quality education, accessible anywhere, anytime.
+                </p>
+                <% if (!user) { %>
+                    <div class="d-flex gap-3 flex-wrap">
+                        <a href="/auth/register" class="btn btn-light btn-lg px-4 hover-lift">
+                            <i class="fas fa-rocket me-2"></i>Start Learning Free
+                        </a>
+                        <a href="/auth/login" class="btn btn-outline-light btn-lg px-4">
+                            <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                        </a>
+                    </div>
+                    <% } else { %>
+                        <a href="/<%= user.role_name %>/<%= user.role_name === 'admin' ? 'dashboard' : 'dashboard' %>"
+                            class="btn btn-light btn-lg px-4 hover-lift">
+                            <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                        </a>
+                        <% } %>
+            </div>
+            <div class="col-lg-6 text-center">
+                <img src="/img/logo.png" alt="<%= app_name %>"
+                    style="max-width: 300px; filter: drop-shadow(0 10px 30px rgba(0,0,0,0.2));">
+            </div>
         </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 col-6 mb-4 mb-md-0">
+                <div class="stat-item">
+                    <div class="stat-number">500+</div>
+                    <p class="text-muted mb-0">Active Students</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4 mb-md-0">
+                <div class="stat-item">
+                    <div class="stat-number">50+</div>
+                    <p class="text-muted mb-0">Expert Instructors</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-item">
+                    <div class="stat-number">100+</div>
+                    <p class="text-muted mb-0">Quality Courses</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-item">
+                    <div class="stat-number">95%</div>
+                    <p class="text-muted mb-0">Success Rate</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="container my-5">
+    <div class="text-center mb-5">
+        <h2 class="display-5 fw-bold mb-3">Why Choose <%= app_name %>?</h2>
+        <p class="lead text-muted">Everything you need to succeed in your learning journey</p>
     </div>
 
-    <div class="row mt-5">
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 text-center">
-                <div class="card-body">
-                    <i class="fas fa-book fa-3x text-primary mb-3"></i>
-                    <h5 class="card-title">Course Management</h5>
-                    <p class="card-text">Create, manage, and deliver courses with ease.</p>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card feature-card hover-lift">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon bg-primary-soft">
+                        <i class="fas fa-graduation-cap text-primary"></i>
+                    </div>
+                    <h5 class="card-title mb-3">Expert-Led Courses</h5>
+                    <p class="card-text text-muted">
+                        Learn from industry professionals and experienced educators who are passionate about teaching.
+                    </p>
                 </div>
             </div>
         </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 text-center">
-                <div class="card-body">
-                    <i class="fas fa-users fa-3x text-success mb-3"></i>
-                    <h5 class="card-title">Student Tracking</h5>
-                    <p class="card-text">Monitor student progress and performance.</p>
+
+        <div class="col-md-4">
+            <div class="card feature-card hover-lift">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon bg-success-soft">
+                        <i class="fas fa-clock text-success"></i>
+                    </div>
+                    <h5 class="card-title mb-3">Learn at Your Pace</h5>
+                    <p class="card-text text-muted">
+                        Study whenever and wherever you want. Our platform is available 24/7 on any device.
+                    </p>
                 </div>
             </div>
         </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 text-center">
-                <div class="card-body">
-                    <i class="fas fa-chart-bar fa-3x text-info mb-3"></i>
-                    <h5 class="card-title">Analytics</h5>
-                    <p class="card-text">Get insights into learning outcomes and engagement.</p>
+
+        <div class="col-md-4">
+            <div class="card feature-card hover-lift">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon bg-warning-soft">
+                        <i class="fas fa-certificate text-warning"></i>
+                    </div>
+                    <h5 class="card-title mb-3">Earn Certificates</h5>
+                    <p class="card-text text-muted">
+                        Get recognized for your achievements with certificates you can share with employers.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card feature-card hover-lift">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon" style="background: #e3f2fd; color: #1976d2;">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h5 class="card-title mb-3">Interactive Learning</h5>
+                    <p class="card-text text-muted">
+                        Engage with peers and instructors through discussions, assignments, and live sessions.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card feature-card hover-lift">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon" style="background: #f3e5f5; color: #7b1fa2;">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h5 class="card-title mb-3">Track Progress</h5>
+                    <p class="card-text text-muted">
+                        Monitor your learning journey with detailed analytics and personalized insights.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card feature-card hover-lift">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon" style="background: #e8f5e9; color: #388e3c;">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h5 class="card-title mb-3">Mobile Friendly</h5>
+                    <p class="card-text text-muted">
+                        Access your courses on any device - desktop, tablet, or smartphone.
+                    </p>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container text-center">
+        <h2 class="display-5 fw-bold mb-3">Ready to Start Your Journey?</h2>
+        <p class="lead text-muted mb-4">
+            Join our community of learners today and unlock your potential
+        </p>
+        <% if (!user) { %>
+            <a href="/auth/register" class="btn btn-primary btn-lg px-5 hover-lift">
+                <i class="fas fa-user-plus me-2"></i>Create Free Account
+            </a>
+            <% } else { %>
+                <a href="/courses" class="btn btn-primary btn-lg px-5 hover-lift">
+                    <i class="fas fa-book me-2"></i>Browse Courses
+                </a>
+                <% } %>
+    </div>
+</section>
+
+<!-- Quick Links Section -->
+<section class="container my-5">
+    <div class="row">
+        <div class="col-md-3 mb-4">
+            <h5 class="fw-bold mb-3">For Students</h5>
+            <ul class="list-unstyled">
+                <li class="mb-2"><a href="/courses" class="text-muted text-decoration-none hover-lift d-inline-block"><i
+                            class="fas fa-book me-2"></i>Browse Courses</a></li>
+                <li class="mb-2"><a href="/programs"
+                        class="text-muted text-decoration-none hover-lift d-inline-block"><i
+                            class="fas fa-graduation-cap me-2"></i>Programs</a></li>
+                <li class="mb-2"><a href="/library" class="text-muted text-decoration-none hover-lift d-inline-block"><i
+                            class="fas fa-book-reader me-2"></i>Library</a></li>
+                <li class="mb-2"><a href="/calendar"
+                        class="text-muted text-decoration-none hover-lift d-inline-block"><i
+                            class="fas fa-calendar me-2"></i>Calendar</a></li>
+            </ul>
+        </div>
+        <div class="col-md-3 mb-4">
+            <h5 class="fw-bold mb-3">Resources</h5>
+            <ul class="list-unstyled">
+                <li class="mb-2"><a href="/help" class="text-muted text-decoration-none hover-lift d-inline-block"><i
+                            class="fas fa-question-circle me-2"></i>Help Center</a></li>
+                <li class="mb-2"><a href="/about" class="text-muted text-decoration-none hover-lift d-inline-block"><i
+                            class="fas fa-info-circle me-2"></i>About Us</a></li>
+                <li class="mb-2"><a href="/contact" class="text-muted text-decoration-none hover-lift d-inline-block"><i
+                            class="fas fa-envelope me-2"></i>Contact</a></li>
+                <li class="mb-2"><a href="/features"
+                        class="text-muted text-decoration-none hover-lift d-inline-block"><i
+                            class="fas fa-star me-2"></i>Features</a></li>
+            </ul>
+        </div>
+        <div class="col-md-3 mb-4">
+            <h5 class="fw-bold mb-3">Legal</h5>
+            <ul class="list-unstyled">
+                <li class="mb-2"><a href="/privacy" class="text-muted text-decoration-none hover-lift d-inline-block"><i
+                            class="fas fa-shield-alt me-2"></i>Privacy Policy</a></li>
+                <li class="mb-2"><a href="/terms" class="text-muted text-decoration-none hover-lift d-inline-block"><i
+                            class="fas fa-file-contract me-2"></i>Terms of Service</a></li>
+            </ul>
+        </div>
+        <div class="col-md-3 mb-4">
+            <h5 class="fw-bold mb-3">Connect</h5>
+            <div class="d-flex gap-3">
+                <a href="#" class="text-muted hover-lift"><i class="fab fa-facebook fa-2x"></i></a>
+                <a href="#" class="text-muted hover-lift"><i class="fab fa-twitter fa-2x"></i></a>
+                <a href="#" class="text-muted hover-lift"><i class="fab fa-linkedin fa-2x"></i></a>
+                <a href="#" class="text-muted hover-lift"><i class="fab fa-instagram fa-2x"></i></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Animate stats on scroll
+        const observerOptions = {
+            threshold: 0.5
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const statNumbers = entry.target.querySelectorAll('.stat-number');
+                    statNumbers.forEach(stat => {
+                        const finalValue = stat.textContent;
+                        stat.style.opacity = '0';
+                        setTimeout(() => {
+                            stat.style.transition = 'opacity 0.5s ease';
+                            stat.style.opacity = '1';
+                        }, 100);
+                    });
+                }
+            });
+        }, observerOptions);
+
+        const statsSection = document.querySelector('.stats-section');
+        if (statsSection) {
+            observer.observe(statsSection);
+        }
+    });
+</script>

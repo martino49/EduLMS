@@ -1,0 +1,67 @@
+<%- include('../../../layouts/instructor-layout', { title: title, pageTitle: pageTitle, currentPage: 'assignments' ,
+    breadcrumbs: breadcrumbs }) %>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 text-primary fw-bold text-uppercase small">Create Assignment</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form action="/instructor/assignments/create" method="POST">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Associated Course</label>
+                            <select name="course_id" class="form-select" required>
+                                <option value="">Select a Course</option>
+                                <% courses.forEach(course=> { %>
+                                    <option value="<%= course.id %>" <%=selectedCourseId==course.id ? 'selected' : '' %>
+                                        >
+                                        <%= course.course_code %>: <%= course.title %>
+                                    </option>
+                                    <% }); %>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Assignment Title</label>
+                            <input type="text" name="title" class="form-control form-control-lg"
+                                placeholder="e.g. Midterm Lab Report" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Description / Instructions</label>
+                            <textarea name="description" class="form-control" rows="6"
+                                placeholder="Provide detailed instructions for your students..."></textarea>
+                        </div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Due Date & Time</label>
+                                <input type="datetime-local" name="due_date" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Maximum Points</label>
+                                <input type="number" name="max_points" class="form-control" value="100" min="1"
+                                    required>
+                            </div>
+                        </div>
+
+                        <div class="mb-4 p-3 bg-light rounded border">
+                            <div class="form-check form-switch cursor-pointer">
+                                <input class="form-check-input" type="checkbox" name="publish_immediately"
+                                    id="publishSwitch" value="true">
+                                <label class="form-check-label fw-bold" for="publishSwitch">Publish Immediately</label>
+                                <p class="small text-muted mb-0">If disabled, this assignment will be saved as a draft.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="/instructor/assignments" class="btn btn-light border px-4">Cancel</a>
+                            <button type="submit" class="btn btn-primary px-5 fw-bold">Create Assignment</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>

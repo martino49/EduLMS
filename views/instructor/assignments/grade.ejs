@@ -1,0 +1,125 @@
+<%- include('../../../layouts/instructor-layout', { title: title, pageTitle: pageTitle, currentPage: 'submissions' ,
+    breadcrumbs: breadcrumbs }) %>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="row">
+                <!-- Submission Content -->
+                <div class="col-md-8">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="mb-0 text-primary fw-bold text-uppercase small">Submission Content</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-4">
+                                <h6 class="fw-bold text-muted small text-uppercase mb-2">Student Response</h6>
+                                <div class="p-3 bg-light rounded border min-vh-25">
+                                    <%- submission.submission_text || 'No text content provided.' %>
+                                </div>
+                            </div>
+
+                            <% if (submission.file_path) { %>
+                                <div class="mb-4">
+                                    <h6 class="fw-bold text-muted small text-uppercase mb-2">Attached File</h6>
+                                    <div class="p-3 border rounded d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-file-pdf text-danger fa-2x me-3"></i>
+                                            <div>
+                                                <div class="fw-bold">
+                                                    <%= submission.file_name || 'submission_file' %>
+                                                </div>
+                                                <small class="text-muted">PDF Document</small>
+                                            </div>
+                                        </div>
+                                        <a href="/<%= submission.file_path %>" class="btn btn-outline-primary btn-sm"
+                                            target="_blank">
+                                            <i class="fas fa-download me-1"></i>Download
+                                        </a>
+                                    </div>
+                                </div>
+                                <% } %>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grading Panel -->
+                <div class="col-md-4">
+                    <div class="card shadow-sm border-primary">
+                        <div class="card-header bg-primary text-white py-3">
+                            <h5 class="mb-0 fw-bold text-uppercase small">Grading Panel</h5>
+                        </div>
+                        <div class="card-body">
+                            <form action="/instructor/submissions/<%= submission.id %>/grade" method="POST">
+                                <div class="mb-4 text-center">
+                                    <label class="form-label d-block fw-bold text-muted small text-uppercase">Award
+                                        Grade</label>
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <input type="number" name="grade"
+                                            class="form-control form-control-lg text-center fw-bold"
+                                            style="width: 100px; font-size: 2rem;" value="<%= submission.grade || '' %>"
+                                            min="0" max="<%= submission.max_points %>" required>
+                                        <span class="h3 ms-2 text-muted">/ <%= submission.max_points %></span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold text-muted small text-uppercase">Feedback to
+                                        Student</label>
+                                    <textarea name="feedback" class="form-control" rows="5"
+                                        placeholder="Great work! Consider refining the results section..."><%= submission.feedback || '' %></textarea>
+                                </div>
+
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-primary fw-bold py-2">
+                                        <i class="fas fa-save me-2"></i>Save Grade
+                                    </button>
+                                    <a href="/instructor/submissions" class="btn btn-light border py-2">Cancel</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Submission Info -->
+                    <div class="card shadow-sm mt-4">
+                        <div class="card-body small">
+                            <div class="mb-2">
+                                <span class="text-muted text-uppercase smaller fw-bold">Student:</span>
+                                <span class="float-end fw-bold">
+                                    <%= submission.student_name %>
+                                </span>
+                            </div>
+                            <div class="mb-2">
+                                <span class="text-muted text-uppercase smaller fw-bold">Assignment:</span>
+                                <span class="float-end fw-bold">
+                                    <%= submission.assignment_title %>
+                                </span>
+                            </div>
+                            <div class="mb-2">
+                                <span class="text-muted text-uppercase smaller fw-bold">Submitted:</span>
+                                <span class="float-end">
+                                    <%= new Date(submission.submitted_at).toLocaleDateString() %>
+                                </span>
+                            </div>
+                            <div class="mb-0">
+                                <span class="text-muted text-uppercase smaller fw-bold">Status:</span>
+                                <span
+                                    class="float-end badge bg-<%= submission.status === 'graded' ? 'success' : 'warning' %>">
+                                    <%= submission.status %>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .min-vh-25 {
+            min-height: 200px;
+        }
+
+        .smaller {
+            font-size: 0.7rem;
+        }
+    </style>

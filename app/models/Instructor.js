@@ -19,7 +19,7 @@ class Instructor {
       LEFT JOIN courses c ON u.id = c.teacher_id
       LEFT JOIN assignments a ON c.id = a.course_id
       LEFT JOIN enrollments e ON c.id = e.course_id AND e.status = 'active'
-      LEFT JOIN notifications n ON u.id = n.user_id AND n.is_read = 0
+      LEFT JOIN notifications n ON u.id = n.user_id AND n.status = 'unread'
       WHERE u.id = ? AND u.role_id = (SELECT id FROM roles WHERE name = 'instructor')
       GROUP BY u.id
     `, [instructorId]);
@@ -506,6 +506,104 @@ class Instructor {
     }
 
     return { success: true, notified_students: students.length };
+  }
+
+  // Create new course
+  static async createCourse(courseData) {
+    const {
+      course_code, title, description, teacher_id, credits,
+      department, category, duration, max_students,
+      start_date, end_date, academic_year, semester,
+      syllabus, requirements, learning_outcomes, fee_amount
+    } = courseData;
+
+    const [result] = await db.query(`
+      INSERT INTO courses (
+        course_code, title, description, teacher_id, credits,
+        department, category, duration, max_students,
+        start_date, end_date, academic_year, semester,
+        syllabus, requirements, learning_outcomes, fee_amount, status
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')
+    `, [
+      course_code, title, description, teacher_id, credits,
+      department, category, duration, max_students,
+      start_date, end_date, academic_year, semester,
+      syllabus, requirements, learning_outcomes, fee_amount
+    ]);
+
+    return result.insertId;
+  }
+
+  // Update course
+  static async updateCourse(courseId, courseData) {
+    const fields = [];
+    const values = [];
+
+    for (const [key, value] of Object.entries(courseData)) {
+      if (value !== undefined) {
+        fields.push(`${key} = ?`);
+        values.push(value);
+      }
+    }
+
+    if (fields.length === 0) return null;
+
+    values.push(courseId);
+    const [result] = await db.query(`
+      UPDATE courses SET ${fields.join(', ')} WHERE id = ?
+    `, values);
+
+    return result.affectedRows > 0;
+  }
+
+  // Get instructor assignments
+  static async getAssignments(instructorId, filters = {}) {
+    let query = `
+      SELECT a.*, c.title as course_title, c.course_code,
+             COUNT(DISTINCT s.id) as submission_count
+      FROM assignments a
+      JOIN courses c ON a.course_id = c.id
+      LEFT JOIN submissions s ON a.id = s.assignment_id
+      WHERE c.teacher_id = ?
+    `;
+    const params = [instructorId];
+
+    if (filters.courseId) {
+      query += ` AND a.course_id = ?`;
+      params.push(filters.courseId);
+    }
+
+    if (filters.status) {
+      query += ` AND a.status = ?`;
+      params.push(filters.status);
+    }
+
+    query += ` GROUP BY a.id ORDER BY a.due_date DESC`;
+
+    const [rows] = await db.query(query, params);
+    return rows;
+  }
+
+  // Update assignment
+  static async updateAssignment(assignmentId, assignmentData) {
+    const fields = [];
+    const values = [];
+
+    for (const [key, value] of Object.entries(assignmentData)) {
+      if (value !== undefined) {
+        fields.push(`${key} = ?`);
+        values.push(value);
+      }
+    }
+
+    if (fields.length === 0) return null;
+
+    values.push(assignmentId);
+    const [result] = await db.query(`
+      UPDATE assignments SET ${fields.join(', ')} WHERE id = ?
+    `, values);
+
+    return result.affectedRows > 0;
   }
 }
 

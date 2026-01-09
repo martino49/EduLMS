@@ -1,0 +1,73 @@
+<%- include('../../../layouts/instructor-layout', { title: title, pageTitle: pageTitle, currentPage: 'assignments' ,
+    breadcrumbs: breadcrumbs }) %>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 text-primary fw-bold text-uppercase small">Edit Assignment: <%= assignment.title %>
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <form action="/instructor/assignments/<%= assignment.id %>/edit" method="POST">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Associated Course</label>
+                            <select name="course_id" class="form-select" required disabled>
+                                <% courses.forEach(course=> { %>
+                                    <option value="<%= course.id %>" <%=assignment.course_id==course.id ? 'selected'
+                                        : '' %>>
+                                        <%= course.course_code %>: <%= course.title %>
+                                    </option>
+                                    <% }); %>
+                            </select>
+                            <input type="hidden" name="course_id" value="<%= assignment.course_id %>">
+                            <small class="text-muted">Course cannot be changed once assignment is created.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Assignment Title</label>
+                            <input type="text" name="title" class="form-control" value="<%= assignment.title %>"
+                                required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Description / Instructions</label>
+                            <textarea name="description" class="form-control" rows="6"
+                                required><%= assignment.description %></textarea>
+                        </div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Due Date & Time</label>
+                                <input type="datetime-local" name="due_date" class="form-control"
+                                    value="<%= assignment.due_date ? new Date(assignment.due_date).toISOString().slice(0, 16) : '' %>"
+                                    required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Maximum Points</label>
+                                <input type="number" name="max_points" class="form-control"
+                                    value="<%= assignment.max_points %>" min="1" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Status</label>
+                            <select name="status" class="form-select" required>
+                                <option value="draft" <%=assignment.status==='draft' ? 'selected' : '' %>>Draft</option>
+                                <option value="published" <%=assignment.status==='published' ? 'selected' : '' %>
+                                    >Published</option>
+                                <option value="closed" <%=assignment.status==='closed' ? 'selected' : '' %>>Closed (No
+                                    longer accepting submissions)</option>
+                            </select>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="/instructor/assignments/<%= assignment.id %>"
+                                class="btn btn-light border px-4">Cancel</a>
+                            <button type="submit" class="btn btn-primary px-5 fw-bold">Update Assignment</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>

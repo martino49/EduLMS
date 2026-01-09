@@ -1,0 +1,94 @@
+<%- include('../../../layouts/instructor-layout', { title: title, pageTitle: pageTitle, currentPage: 'submissions' ,
+    breadcrumbs: breadcrumbs }) %>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white py-3">
+            <form class="row g-3 align-items-center">
+                <div class="col-md-4">
+                    <select name="assignmentId" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="">All Assignments</option>
+                        <% assignments.forEach(assignment=> { %>
+                            <option value="<%= assignment.id %>" <%=filters.assignmentId==assignment.id ? 'selected'
+                                : '' %>>
+                                <%= assignment.title %>
+                            </option>
+                            <% }); %>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                        <option value="">All Statuses</option>
+                        <option value="pending" <%=filters.status==='pending' ? 'selected' : '' %>>Pending</option>
+                        <option value="graded" <%=filters.status==='graded' ? 'selected' : '' %>>Graded</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">Student</th>
+                            <th>Assignment</th>
+                            <th>Course</th>
+                            <th>Submitted At</th>
+                            <th>Status</th>
+                            <th>Grade</th>
+                            <th class="text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (submissions && submissions.length> 0) { %>
+                            <% submissions.forEach(submission=> { %>
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="fw-bold text-dark">
+                                            <%= submission.student_name %>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <%= submission.assignment_title %>
+                                    </td>
+                                    <td><span class="badge bg-light text-dark border">
+                                            <%= submission.course_code %>
+                                        </span></td>
+                                    <td>
+                                        <%= new Date(submission.submitted_at).toLocaleString() %>
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="badge bg-<%= submission.status === 'graded' ? 'success' : 'warning' %>">
+                                            <%= submission.status.toUpperCase() %>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <% if (submission.grade !==null) { %>
+                                            <span class="fw-bold text-primary">
+                                                <%= submission.grade %>
+                                            </span>
+                                            <% } else { %>
+                                                <span class="text-muted">--</span>
+                                                <% } %>
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        <a href="/instructor/submissions/<%= submission.id %>/grade"
+                                            class="btn btn-sm btn-primary">
+                                            <i class="fas fa-award me-1"></i>Grade
+                                        </a>
+                                    </td>
+                                </tr>
+                                <% }); %>
+                                    <% } else { %>
+                                        <tr>
+                                            <td colspan="7" class="text-center py-5 text-muted">
+                                                <i class="fas fa-inbox d-block mb-2 fa-2x"></i>
+                                                No submissions found.
+                                            </td>
+                                        </tr>
+                                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>

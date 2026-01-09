@@ -14,7 +14,7 @@ const Helpers = {
   generatePagination: (currentPage, totalPages, baseUrl) => ({
     current: parseInt(currentPage),
     total: totalPages,
-    pages: Array.from({length: totalPages}, (_, i) => ({
+    pages: Array.from({ length: totalPages }, (_, i) => ({
       number: i + 1,
       isCurrent: (i + 1) === parseInt(currentPage),
       url: `${baseUrl}?page=${i + 1}`
@@ -22,8 +22,8 @@ const Helpers = {
     baseUrl
   }),
   formatDate: (date) => date ? new Date(date).toLocaleDateString() : '',
-  formatCurrency: (amount) => new Intl.NumberFormat('en-KE', {style: 'currency', currency: 'KES'}).format(amount || 0),
-  
+  formatCurrency: (amount) => new Intl.NumberFormat('en-KE', { style: 'currency', currency: 'KES' }).format(amount || 0),
+
   // Generate user initials
   generateInitials: (user) => {
     if (!user) return 'U';
@@ -41,7 +41,7 @@ const Helpers = {
 
 const ROLES = {
   ADMIN: 'admin',
-  STUDENT: 'student', 
+  STUDENT: 'student',
   INSTRUCTOR: 'instructor',
   FINANCE: 'finance'
 };
@@ -69,22 +69,22 @@ const AdminController = {
   async dashboard(req, res) {
     try {
       console.log('Loading admin dashboard...');
-      
+
       // Get basic stats using actual schema
       const [users] = await pool.execute('SELECT COUNT(*) as total FROM users');
-      
+
       // Count students (users with student_id)
       const [students] = await pool.execute(`
         SELECT COUNT(*) as total FROM users 
         WHERE student_id IS NOT NULL AND student_id != ''
       `);
-      
+
       // Count instructors (users with teacher_id)
       const [instructors] = await pool.execute(`
         SELECT COUNT(*) as total FROM users 
         WHERE teacher_id IS NOT NULL AND teacher_id != ''
       `);
-      
+
       const [courses] = await pool.execute('SELECT COUNT(*) as total FROM courses');
       const [payments] = await pool.execute('SELECT COUNT(*) as total FROM payments WHERE status = "completed"');
       const [revenue] = await pool.execute('SELECT SUM(amount) as total FROM payments WHERE status = "completed"');
@@ -110,10 +110,10 @@ const AdminController = {
       });
     } catch (error) {
       console.error('Admin dashboard error:', error);
-      
+
       // Safe error handling
       const currentUser = getUserWithInitials(req.user || {});
-      
+
       req.flash('error', 'Error loading dashboard data');
       res.render('admin/dashboard', {
         title: 'Admin Dashboard - EduLMS',
@@ -190,7 +190,7 @@ const AdminController = {
       const userId = req.params.id;
 
       const [users] = await pool.execute('SELECT * FROM users WHERE id = ?', [userId]);
-      
+
       if (users.length === 0) {
         req.flash('error', 'User not found');
         return res.redirect('/admin/users');
@@ -310,13 +310,13 @@ const AdminController = {
 
     } catch (error) {
       console.error('Add user error:', error);
-      
+
       if (error.code === 'ER_DUP_ENTRY') {
         req.flash('error', 'Email already exists');
       } else {
         req.flash('error', 'Error creating user: ' + error.message);
       }
-      
+
       res.redirect('/admin/users/create');
     }
   },
@@ -327,7 +327,7 @@ const AdminController = {
       const userId = req.params.id;
 
       const [users] = await pool.execute('SELECT * FROM users WHERE id = ?', [userId]);
-      
+
       if (users.length === 0) {
         req.flash('error', 'User not found');
         return res.redirect('/admin/users');
@@ -357,7 +357,7 @@ const AdminController = {
       const userId = req.params.id;
 
       const [users] = await pool.execute('SELECT * FROM users WHERE id = ?', [userId]);
-      
+
       if (users.length === 0) {
         req.flash('error', 'User not found');
         return res.redirect('/admin/users');
@@ -404,13 +404,13 @@ const AdminController = {
 
     } catch (error) {
       console.error('Update user error:', error);
-      
+
       if (error.code === 'ER_DUP_ENTRY') {
         req.flash('error', 'Email already exists');
       } else {
         req.flash('error', 'Error updating user: ' + error.message);
       }
-      
+
       res.redirect(`/admin/users/edit/${userId}`);
     }
   },
@@ -422,7 +422,7 @@ const AdminController = {
 
       // Check if user exists first
       const [users] = await pool.execute('SELECT * FROM users WHERE id = ?', [userId]);
-      
+
       if (users.length === 0) {
         req.flash('error', 'User not found');
         return res.redirect('/admin/users');
@@ -461,10 +461,10 @@ const AdminController = {
   async updateSystemSettings(req, res) {
     try {
       const { system_name, email_from, max_file_size } = req.body;
-      
+
       // Here you would typically save to database
       // For now, just show success message
-      
+
       req.flash('success', 'System settings updated successfully');
       res.redirect('/admin/system/settings');
     } catch (error) {
@@ -538,7 +538,7 @@ const AdminController = {
         LEFT JOIN users u ON c.teacher_id = u.id 
         WHERE c.id = ?
       `, [courseId]);
-      
+
       if (courses.length === 0) {
         req.flash('error', 'Course not found');
         return res.redirect('/admin/courses');
@@ -614,13 +614,13 @@ const AdminController = {
 
     } catch (error) {
       console.error('Create course error:', error);
-      
+
       if (error.code === 'ER_DUP_ENTRY') {
         req.flash('error', 'Course code already exists');
       } else {
         req.flash('error', 'Error creating course: ' + error.message);
       }
-      
+
       res.redirect('/admin/courses/create');
     }
   },
@@ -630,7 +630,7 @@ const AdminController = {
       const courseId = req.params.id;
 
       const [courses] = await pool.execute('SELECT * FROM courses WHERE id = ?', [courseId]);
-      
+
       if (courses.length === 0) {
         req.flash('error', 'Course not found');
         return res.redirect('/admin/courses');
@@ -686,13 +686,13 @@ const AdminController = {
 
     } catch (error) {
       console.error('Update course error:', error);
-      
+
       if (error.code === 'ER_DUP_ENTRY') {
         req.flash('error', 'Course code already exists');
       } else {
         req.flash('error', 'Error updating course: ' + error.message);
       }
-      
+
       res.redirect(`/admin/courses/edit/${courseId}`);
     }
   },
@@ -703,7 +703,7 @@ const AdminController = {
 
       // Check if course exists first
       const [courses] = await pool.execute('SELECT * FROM courses WHERE id = ?', [courseId]);
-      
+
       if (courses.length === 0) {
         req.flash('error', 'Course not found');
         return res.redirect('/admin/courses');
@@ -731,7 +731,7 @@ const AdminController = {
         LEFT JOIN users u ON c.teacher_id = u.id 
         WHERE c.id = ?
       `, [courseId]);
-      
+
       if (courses.length === 0) {
         req.flash('error', 'Course not found');
         return res.redirect('/admin/courses');
@@ -1127,37 +1127,37 @@ const AdminController = {
       res.redirect('/admin/reports/generate');
     }
   },
-  
-// Finance Officers Management
-async listFinanceOfficers(req, res) {
-  try {
-    const [financeOfficers] = await pool.execute(`
+
+  // Finance Officers Management
+  async listFinanceOfficers(req, res) {
+    try {
+      const [financeOfficers] = await pool.execute(`
       SELECT * FROM users 
       WHERE role_id = 4 AND employee_id IS NOT NULL
       ORDER BY created_at DESC
     `);
 
-    // Add initials to each finance officer
-    const officersWithInitials = financeOfficers.map(officer => getUserWithInitials(officer));
+      // Add initials to each finance officer
+      const officersWithInitials = financeOfficers.map(officer => getUserWithInitials(officer));
 
-    res.render('admin/users/finance-officers', {
-      title: 'Finance Officers Management - EduLMS',
-      layout: 'layouts/admin-layout',
-      currentUser: getUserWithInitials(req.user || {}),
-      currentPage: 'finance',
-      financeOfficers: officersWithInitials
-    });
-  } catch (error) {
-    console.error('List finance officers error:', error);
-    req.flash('error', 'Error loading finance officers');
-    res.redirect('/admin/dashboard');
-  }
-},
+      res.render('admin/users/finance-officers', {
+        title: 'Finance Officers Management - EduLMS',
+        layout: 'layouts/admin-layout',
+        currentUser: getUserWithInitials(req.user || {}),
+        currentPage: 'finance',
+        financeOfficers: officersWithInitials
+      });
+    } catch (error) {
+      console.error('List finance officers error:', error);
+      req.flash('error', 'Error loading finance officers');
+      res.redirect('/admin/dashboard');
+    }
+  },
 
 
-async academicReports(req, res) {
-  try {
-    const [academicData] = await pool.execute(`
+  async academicReports(req, res) {
+    try {
+      const [academicData] = await pool.execute(`
       SELECT 
         c.title as course_name,
         c.course_code,
@@ -1170,23 +1170,54 @@ async academicReports(req, res) {
       ORDER BY c.created_at DESC
     `);
 
-    res.render('admin/reports/academic-reports', {
-      title: 'Academic Reports - EduLMS',
-      layout: 'layouts/admin-layout',
-      currentUser: getUserWithInitials(req.user || {}),
-      currentPage: 'reports',
-      academicData: academicData || []
-    });
-  } catch (error) {
-    console.error('Academic reports error:', error);
-    req.flash('error', 'Error loading academic reports');
-    res.redirect('/admin/reports/generate');
-  }
-},
+      res.render('admin/reports/academic-reports', {
+        title: 'Academic Reports - EduLMS',
+        layout: 'layouts/admin-layout',
+        currentUser: getUserWithInitials(req.user || {}),
+        currentPage: 'reports',
+        academicData: academicData || []
+      });
+    } catch (error) {
+      console.error('Academic reports error:', error);
+      req.flash('error', 'Error loading academic reports');
+      res.redirect('/admin/reports/generate');
+    }
+  },
 
   // Get user role name
   getUserRole(roleId) {
     return ROLE_MAP[roleId] || 'user';
+  },
+  // View Self Profile
+  viewProfile: async (req, res) => {
+    try {
+      const adminId = req.user.id;
+      const [rows] = await pool.query(
+        `SELECT u.*, r.name as role_name 
+         FROM users u 
+         JOIN roles r ON u.role_id = r.id 
+         WHERE u.id = ?`,
+        [adminId]
+      );
+
+      if (rows.length === 0) {
+        req.flash('error', 'Profile not found');
+        return res.redirect('/admin/dashboard');
+      }
+
+      const user = rows[0];
+      user.initials = Helpers.generateInitials(user);
+
+      res.render('admin/profile/view', {
+        title: 'My Profile - EduLMS Admin',
+        user,
+        currentPage: 'profile'
+      });
+    } catch (error) {
+      console.error('Error viewing admin profile:', error);
+      req.flash('error', 'Could not load profile');
+      res.redirect('/admin/dashboard');
+    }
   }
 };
 

@@ -1,0 +1,138 @@
+<%- include('../../layouts/instructor-layout', { title: title, pageTitle: pageTitle, currentPage: 'analytics' ,
+    breadcrumbs: breadcrumbs }) %>
+
+    <div class="row g-4 mb-4">
+        <!-- Stat Cards -->
+        <div class="col-md-3">
+            <div class="card shadow-sm h-100 border-0 border-start border-primary border-4">
+                <div class="card-body">
+                    <small class="text-uppercase fw-bold text-muted smaller">Enrolled Students</small>
+                    <div class="h3 mb-0 fw-bold">
+                        <%= stats.total_enrolled %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm h-100 border-0 border-start border-success border-4">
+                <div class="card-body">
+                    <small class="text-uppercase fw-bold text-muted smaller">Total Assignments</small>
+                    <div class="h3 mb-0 fw-bold">
+                        <%= stats.total_assignments %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm h-100 border-0 border-start border-info border-4">
+                <div class="card-body">
+                    <small class="text-uppercase fw-bold text-muted smaller">Submissions</small>
+                    <div class="h3 mb-0 fw-bold">
+                        <%= stats.total_submissions %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm h-100 border-0 border-start border-warning border-4">
+                <div class="card-body">
+                    <small class="text-uppercase fw-bold text-muted smaller">Submission Rate</small>
+                    <div class="h3 mb-0 fw-bold">
+                        <%= stats.total_enrolled> 0 && stats.total_assignments > 0 ?
+                            Math.round((stats.total_submissions / (stats.total_enrolled * stats.total_assignments)) *
+                            100) : 0 %>%
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white py-3">
+                    <h6 class="mb-0 fw-bold text-uppercase small text-primary">Grade Distribution (Across All Courses)
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <% const gradeColors={ 'A' : 'success' , 'B' : 'primary' , 'C' : 'info' , 'D' : 'warning'
+                                , 'F' : 'danger' }; grades.forEach(g=> {
+                                const percentage = Math.round((g.count / stats.total_submissions) * 100);
+                                %>
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span class="fw-bold">Grade <%= g.letter_grade %></span>
+                                        <span class="text-muted">
+                                            <%= g.count %> students (<%= percentage %>%)
+                                        </span>
+                                    </div>
+                                    <div class="progress" style="height: 10px;">
+                                        <div class="progress-bar bg-<%= gradeColors[g.letter_grade] || 'secondary' %>"
+                                            role="progressbar" style="width: <%= percentage %>%;"></div>
+                                    </div>
+                                </div>
+                                <% }); %>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <i class="fas fa-chart-pie fa-5x text-light opacity-50 mb-3"></i>
+                            <p class="text-muted">Detailed visual analytics with Chart.js would be integrated here for
+                                production.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white py-3">
+                    <h6 class="mb-0 fw-bold text-uppercase small text-primary">Key Metrics</h6>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item px-0 py-3 d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="fw-bold">Average Engagement</div>
+                                <small class="text-muted">Student interaction with materials</small>
+                            </div>
+                            <span class="badge bg-soft-primary text-primary fs-6">84%</span>
+                        </div>
+                        <div class="list-group-item px-0 py-3 d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="fw-bold">On-time Submissions</div>
+                                <small class="text-muted">Within due dates</small>
+                            </div>
+                            <span class="badge bg-soft-success text-success fs-6">92%</span>
+                        </div>
+                        <div class="list-group-item px-0 py-3 d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="fw-bold">Course Satisfaction</div>
+                                <small class="text-muted">Based on student feedback</small>
+                            </div>
+                            <span class="badge bg-soft-warning text-warning fs-6">4.8/5</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .smaller {
+            font-size: 0.7rem;
+        }
+
+        .bg-soft-primary {
+            background-color: rgba(13, 110, 253, 0.1);
+        }
+
+        .bg-soft-success {
+            background-color: rgba(25, 135, 84, 0.1);
+        }
+
+        .bg-soft-warning {
+            background-color: rgba(255, 193, 7, 0.1);
+        }
+    </style>

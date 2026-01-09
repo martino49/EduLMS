@@ -75,6 +75,17 @@ router.get('/dashboard', (req, res) => {
     safeHandler(adminController.dashboard, 'dashboard')(req, res);
 });
 
+// Profile
+router.get('/profile', (req, res) => {
+    res.locals.pageTitle = 'My Profile';
+    safeHandler(adminController.viewProfile, 'viewProfile')(req, res);
+});
+
+// Settings (Redirect to System Settings)
+router.get('/settings', (req, res) => {
+    res.redirect('/admin/system/settings');
+});
+
 // ==================== USER MANAGEMENT ROUTES ====================
 
 // User Management

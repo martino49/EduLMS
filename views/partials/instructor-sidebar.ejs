@@ -57,7 +57,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <%= currentPage === 'submissions' ? 'active' : '' %>"
-                            href="/instructor/assignments/submissions">
+                            href="/instructor/submissions">
                             <span class="nav-icon-box"><i class="fas fa-inbox-out"></i></span>
                             <span class="nav-link-text">Submissions</span>
                             <span class="nav-link-badge pulse alert">12</span>
@@ -72,9 +72,16 @@
                 <ul class="nav-list">
                     <li class="nav-item">
                         <a class="nav-link <%= currentPage === 'gradebook' ? 'active' : '' %>"
-                            href="/instructor/grades/gradebook">
+                            href="/instructor/gradebook">
                             <span class="nav-icon-box"><i class="fas fa-chart-network"></i></span>
-                            <span class="nav-link-text">Grade Analysis</span>
+                            <span class="nav-link-text">Gradebook</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= currentPage === 'analytics' ? 'active' : '' %>"
+                            href="/instructor/analytics">
+                            <span class="nav-icon-box"><i class="fas fa-chart-line"></i></span>
+                            <span class="nav-link-text">Performance</span>
                         </a>
                     </li>
                 </ul>

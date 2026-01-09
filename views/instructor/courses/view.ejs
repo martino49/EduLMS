@@ -1,0 +1,193 @@
+<%- include('../../../layouts/instructor-layout', { title: title, pageTitle: pageTitle, currentPage: 'courses' ,
+    breadcrumbs: breadcrumbs, headerActions: [ { url: `/instructor/courses/${course.id}/edit`, text: 'Edit Course' ,
+    icon: 'fas fa-edit' , class: 'btn-outline-primary' }, { url: `/instructor/assignments/create?courseId=${course.id}`,
+    text: 'New Assignment' , icon: 'fas fa-plus' , class: 'btn-primary' } ] }) %>
+
+    <div class="row">
+        <!-- Course Info Card -->
+        <div class="col-md-8">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 text-primary fw-bold">Course Overview</h5>
+                </div>
+                <div class="card-body">
+                    <h2 class="h4 mb-3 font-outfit">
+                        <%= course.title %>
+                    </h2>
+                    <div class="mb-4">
+                        <span class="badge bg-primary me-2">
+                            <%= course.course_code %>
+                        </span>
+                        <span class="badge bg-secondary me-2">
+                            <%= course.department %>
+                        </span>
+                        <span class="badge bg-info text-dark">
+                            <%= course.credits %> Credits
+                        </span>
+                    </div>
+
+                    <h6 class="fw-bold text-muted mb-2">Description</h6>
+                    <p class="text-secondary mb-4">
+                        <%= course.description || 'No description provided.' %>
+                    </p>
+
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <div class="p-3 border rounded bg-light">
+                                <small class="text-muted d-block uppercase small mb-1">Status</small>
+                                <span class="badge bg-<%= course.status === 'active' ? 'success' : 'warning' %>">
+                                    <%= course.status.toUpperCase() %>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="p-3 border rounded bg-light">
+                                <small class="text-muted d-block uppercase small mb-1">Students Enrolled</small>
+                                <span class="h5 mb-0 fw-bold">
+                                    <%= course.student_count %>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assignments Section -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 text-primary fw-bold text-uppercase small">Recent Assignments</h5>
+                    <a href="/instructor/assignments/create?courseId=<%= course.id %>" class="btn btn-sm btn-primary">
+                        <i class="fas fa-plus me-1"></i>New
+                    </a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-4">Title</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                    <th class="text-end pe-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (assignments && assignments.length> 0) { %>
+                                    <% assignments.forEach(assignment=> { %>
+                                        <tr>
+                                            <td class="ps-4">
+                                                <div class="fw-bold text-dark">
+                                                    <%= assignment.title %>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <%= new Date(assignment.due_date).toLocaleDateString() %>
+                                            </td>
+                                            <td>
+                                                <span
+                                                    class="badge bg-<%= assignment.status === 'published' ? 'success' : 'secondary' %>">
+                                                    <%= assignment.status %>
+                                                </span>
+                                            </td>
+                                            <td class="text-end pe-4">
+                                                <a href="/instructor/assignments/<%= assignment.id %>"
+                                                    class="btn btn-sm btn-light border">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <% }); %>
+                                            <% } else { %>
+                                                <tr>
+                                                    <td colspan="4" class="text-center py-4 text-muted">
+                                                        No assignments created for this course.
+                                                    </td>
+                                                </tr>
+                                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer bg-white text-center">
+                    <a href="/instructor/assignments?courseId=<%= course.id %>" class="text-decoration-none small">View
+                        All Assignments</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Info -->
+        <div class="col-md-4">
+            <!-- Quick Stats -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="stats-icon bg-soft-primary text-primary me-3">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div>
+                            <h6 class="mb-0">Class Size</h6>
+                            <small class="text-muted">
+                                <%= course.student_count %> Active Students
+                            </small>
+                        </div>
+                    </div>
+                    <div class="d-grid shadow-sm">
+                        <a href="/instructor/courses/<%= course.id %>/students"
+                            class="btn btn-outline-primary shadow-sm bg-white">
+                            Manage Class Registry
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course Materials Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 text-primary fw-bold text-uppercase small">Course Materials</h5>
+                    <a href="/instructor/courses/<%= course.id %>/materials" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-upload"></i>
+                    </a>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        <% if (materials && materials.length> 0) { %>
+                            <% materials.slice(0, 5).forEach(material=> { %>
+                                <li class="list-group-item d-flex align-items-center">
+                                    <i class="fas fa-file-pdf text-danger me-2"></i>
+                                    <span class="text-truncate small">
+                                        <%= material.title %>
+                                    </span>
+                                </li>
+                                <% }); %>
+                                    <% } else { %>
+                                        <li class="list-group-item text-center py-3 text-muted small">No materials
+                                            uploaded.</li>
+                                        <% } %>
+                    </ul>
+                </div>
+                <div class="card-footer bg-white text-center">
+                    <a href="/instructor/courses/<%= course.id %>/materials"
+                        class="text-decoration-none small text-primary">Browse Repository</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .font-outfit {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .bg-soft-primary {
+            background-color: rgba(13, 110, 253, 0.1);
+        }
+
+        .stats-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+        }
+    </style>

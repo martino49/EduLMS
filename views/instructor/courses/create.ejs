@@ -1,0 +1,152 @@
+<%- include('../../../layouts/instructor-layout', { title: title, pageTitle: pageTitle, currentPage: 'courses' ,
+    breadcrumbs: breadcrumbs }) %>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 text-primary fw-bold text-uppercase small">Course Configuration</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form action="/instructor/courses/create" method="POST" id="courseForm">
+                        <div class="row g-4">
+                            <!-- Primary Info -->
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Course Title</label>
+                                    <input type="text" name="title" class="form-control form-control-lg"
+                                        placeholder="e.g. Advanced Quantum Computing" required minlength="5"
+                                        maxlength="200">
+                                    <div class="form-text">Professional title as it appears to students.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Description</label>
+                                    <textarea name="description" class="form-control" rows="5"
+                                        placeholder="Comprehensive course overview..." required minlength="10"
+                                        maxlength="2000"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Side Specs -->
+                            <div class="col-md-4">
+                                <div class="mb-3 p-3 bg-light rounded border">
+                                    <label class="form-label fw-bold">Course Code</label>
+                                    <input type="text" name="code" class="form-control" placeholder="e.g. PHY-402"
+                                        required pattern="^[A-Z0-9\-]+$">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Department</label>
+                                    <select name="department" class="form-select" required>
+                                        <option value="">Select Department</option>
+                                        <option value="Computer Science">Computer Science</option>
+                                        <option value="Mathematics">Mathematics</option>
+                                        <option value="Physics">Physics</option>
+                                        <option value="Engineering">Engineering</option>
+                                        <option value="Business">Business</option>
+                                    </select>
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <label class="form-label fw-bold">Credits</label>
+                                        <input type="number" name="credits" class="form-control" value="3.0" step="0.5"
+                                            min="0.5" max="10" required>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label fw-bold">Max Capacity</label>
+                                        <input type="number" name="max_students" class="form-control" value="50" min="1"
+                                            max="500" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <hr>
+                            </div>
+
+                            <!-- Schedule & Logistics -->
+                            <div class="col-md-6">
+                                <h6 class="fw-bold mb-3 text-uppercase small text-muted">Academic Schedule</h6>
+                                <div class="row g-3">
+                                    <div class="col-6">
+                                        <label class="form-label fw-bold">Start Date</label>
+                                        <input type="date" name="start_date" class="form-control" required>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label fw-bold">End Date</label>
+                                        <input type="date" name="end_date" class="form-control" required>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label fw-bold">Academic Year</label>
+                                        <input type="text" name="academic_year" class="form-control"
+                                            placeholder="2024/2025" required>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label fw-bold">Semester</label>
+                                        <select name="semester" class="form-select" required>
+                                            <option value="1">Semester 1</option>
+                                            <option value="2">Semester 2</option>
+                                            <option value="3">Summer Session</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <h6 class="fw-bold mb-3 text-uppercase small text-muted">Additional Metadata</h6>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Fee Amount (KSh)</label>
+                                    <input type="number" name="fee_amount" class="form-control" value="0.00" step="0.01"
+                                        min="0" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Duration (Weeks)</label>
+                                    <input type="number" name="duration" class="form-control" value="12" min="1"
+                                        max="52" required>
+                                </div>
+                            </div>
+
+                            <!-- Rich Content Sections -->
+                            <div class="col-12">
+                                <ul class="nav nav-tabs" id="courseDetails" role="tablist">
+                                    <li class="nav-item">
+                                        <button class="nav-link active fw-bold" data-bs-toggle="tab"
+                                            data-bs-target="#syllabus">Syllabus</button>
+                                    </li>
+                                    <li class="nav-item">
+                                        <button class="nav-link fw-bold" data-bs-toggle="tab"
+                                            data-bs-target="#requirements">Requirements</button>
+                                    </li>
+                                    <li class="nav-item">
+                                        <button class="nav-link fw-bold" data-bs-toggle="tab"
+                                            data-bs-target="#outcomes">Learning Outcomes</button>
+                                    </li>
+                                </ul>
+                                <div class="tab-content p-3 border border-top-0 rounded-bottom">
+                                    <div class="tab-pane fade show active" id="syllabus">
+                                        <textarea name="syllabus" class="form-control" rows="4"
+                                            placeholder="Outline the modules and topics..."></textarea>
+                                    </div>
+                                    <div class="tab-pane fade" id="requirements">
+                                        <textarea name="requirements" class="form-control" rows="4"
+                                            placeholder="Prerequisites, tools, or prior knowledge..."></textarea>
+                                    </div>
+                                    <div class="tab-pane fade" id="outcomes">
+                                        <textarea name="learning_outcomes" class="form-control" rows="4"
+                                            placeholder="What will students be able to do after this course?"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 pt-3">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a href="/instructor/courses" class="btn btn-light border px-4">Cancel</a>
+                                    <button type="submit" class="btn btn-primary px-5 fw-bold">Submit for
+                                        Approval</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>

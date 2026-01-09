@@ -4,11 +4,11 @@
         <div class="brand-logo-wrapper">
             <div class="brand-glow"></div>
             <div class="brand-icon">
-                <i class="fas fa-terminal"></i>
+                <i class="fas fa-graduation-cap"></i>
             </div>
             <div class="brand-text">
                 <span class="brand-main">EduLMS</span>
-                <span class="brand-sub">Core Platform</span>
+                <span class="brand-sub">Admin Panel</span>
             </div>
         </div>
         <button class="sidebar-toggle" onclick="toggleSidebarInternal()">
@@ -34,13 +34,13 @@
         <nav class="sidebar-nav-container">
             <!-- GROUP: OPERATIONS -->
             <div class="nav-group">
-                <div class="nav-group-header">Operations</div>
+                <div class="nav-group-header">📊 Overview</div>
                 <ul class="nav-list">
                     <li class="nav-item">
                         <a class="nav-link <%= currentPage === 'dashboard' ? 'active' : '' %>" href="/admin/dashboard">
-                            <span class="icon-box"><i class="fas fa-grid-2"></i></span>
-                            <span class="link-label">System Console</span>
-                            <span class="link-hint">Dashboard</span>
+                            <span class="icon-box"><i class="fas fa-home"></i></span>
+                            <span class="link-label">Dashboard</span>
+                            <span class="link-hint">Overview</span>
                         </a>
                     </li>
                 </ul>
@@ -48,13 +48,12 @@
 
             <!-- GROUP: ENTITIES -->
             <div class="nav-group">
-                <div class="nav-group-header">Core Entities</div>
+                <div class="nav-group-header">👥 People & Content</div>
                 <ul class="nav-list">
                     <li class="nav-item">
                         <a class="nav-link <%= currentPage === 'users' ? 'active' : '' %>" href="/admin/users">
-                            <span class="icon-box"><i class="fas fa-users-viewfinder"></i></span>
-                            <span class="link-label">Registry</span>
-                            <span class="link-badge">45</span>
+                            <span class="icon-box"><i class="fas fa-users"></i></span>
+                            <span class="link-label">Users</span>
                         </a>
                     </li>
                     <li class="nav-item-sub">
@@ -67,9 +66,8 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <%= currentPage === 'courses' ? 'active' : '' %>" href="/admin/courses">
-                            <span class="icon-box"><i class="fas fa-layer-group"></i></span>
-                            <span class="link-label">Curriculum</span>
-                            <span class="link-badge">12</span>
+                            <span class="icon-box"><i class="fas fa-book"></i></span>
+                            <span class="link-label">Courses</span>
                         </a>
                     </li>
                 </ul>
@@ -77,21 +75,20 @@
 
             <!-- GROUP: FISCAL -->
             <div class="nav-group">
-                <div class="nav-group-header">Fiscal Layer</div>
+                <div class="nav-group-header">💰 Finance</div>
                 <ul class="nav-list">
                     <li class="nav-item">
                         <a class="nav-link <%= currentPage === 'payments' ? 'active' : '' %>"
                             href="/admin/finance/payments">
-                            <span class="icon-box"><i class="fas fa-vault"></i></span>
-                            <span class="link-label">Ledger</span>
-                            <span class="link-badge pulse">24</span>
+                            <span class="icon-box"><i class="fas fa-credit-card"></i></span>
+                            <span class="link-label">Payments</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <%= currentPage === 'fees' ? 'active' : '' %>"
                             href="/admin/finance/fee-structure">
-                            <span class="icon-box"><i class="fas fa-calculator"></i></span>
-                            <span class="link-label">Provisioning</span>
+                            <span class="icon-box"><i class="fas fa-dollar-sign"></i></span>
+                            <span class="link-label">Fee Structure</span>
                         </a>
                     </li>
                 </ul>
@@ -99,20 +96,20 @@
 
             <!-- GROUP: INFRASTRUCTURE -->
             <div class="nav-group">
-                <div class="nav-group-header">Infrastructure</div>
+                <div class="nav-group-header">⚙️ System</div>
                 <ul class="nav-list">
                     <li class="nav-item">
                         <a class="nav-link <%= currentPage === 'settings' ? 'active' : '' %>"
                             href="/admin/system/settings">
-                            <span class="icon-box"><i class="fas fa-microchip"></i></span>
-                            <span class="link-label">Configurations</span>
+                            <span class="icon-box"><i class="fas fa-cog"></i></span>
+                            <span class="link-label">Settings</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <%= currentPage === 'audit' ? 'active' : '' %>"
                             href="/admin/system/audit-logs">
-                            <span class="icon-box"><i class="fas fa-fingerprint"></i></span>
-                            <span class="link-label">Audit Stream</span>
+                            <span class="icon-box"><i class="fas fa-history"></i></span>
+                            <span class="link-label">Activity Logs</span>
                         </a>
                     </li>
                 </ul>
@@ -120,12 +117,12 @@
         </nav>
     </div>
 
-    <!-- Sidebar Footer: System Integrity -->
+    <!-- Sidebar Footer: System Status -->
     <div class="sidebar-footer-integrity">
         <div class="integrity-card">
             <div class="integrity-header">
-                <span class="integrity-title">NODE STATUS</span>
-                <span class="integrity-status-text">Health 100%</span>
+                <span class="integrity-title">System Status</span>
+                <span class="integrity-status-text">All Good ✓</span>
             </div>
             <div class="integrity-bar">
                 <div class="integrity-progress" style="width: 100%"></div>

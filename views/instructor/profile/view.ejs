@@ -1,0 +1,117 @@
+<%- include('../../../layouts/instructor-layout', { title: title, pageTitle: pageTitle, currentPage: 'profile' ,
+    breadcrumbs: breadcrumbs, headerActions: [ { url: '/instructor/profile/edit' , text: 'Edit Profile' ,
+    icon: 'fas fa-edit' , class: 'btn-primary' } ] }) %>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 text-center p-4 mb-4">
+                <div class="position-relative d-inline-block mx-auto mb-3">
+                    <img src="<%= profile.profile_image || '/img/default-avatar.png' %>"
+                        class="rounded-circle border border-4 border-light shadow-sm"
+                        style="width: 150px; height: 150px; object-fit: cover;">
+                    <span
+                        class="position-absolute bottom-0 end-0 badge rounded-pill bg-success p-2 border border-3 border-white">
+                        <span class="visually-hidden">Online</span>
+                    </span>
+                </div>
+                <h4 class="fw-bold mb-1">
+                    <%= profile.name %>
+                </h4>
+                <p class="text-muted">
+                    <%= profile.role_name %>
+                </p>
+                <div class="d-flex justify-content-center gap-2 mb-3">
+                    <span class="badge bg-soft-primary text-primary px-3 py-2">
+                        <%= profile.total_courses %> Courses
+                    </span>
+                    <span class="badge bg-soft-success text-success px-3 py-2">
+                        <%= profile.total_students %> Students
+                    </span>
+                </div>
+                <hr>
+                <div class="text-start small">
+                    <div class="mb-2"><i class="fas fa-envelope text-muted me-2"></i>
+                        <%= profile.email %>
+                    </div>
+                    <div class="mb-2"><i class="fas fa-phone text-muted me-2"></i>
+                        <%= profile.phone || 'N/A' %>
+                    </div>
+                    <div><i class="fas fa-calendar text-muted me-2"></i>Joined <%= new
+                            Date(profile.created_at).toLocaleDateString() %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-white py-3">
+                    <h6 class="mb-0 fw-bold text-uppercase small text-primary">Biography & Expertise</h6>
+                </div>
+                <div class="card-body">
+                    <p class="lead" style="font-size: 1.1rem;">
+                        <%= profile.bio || 'This instructor hasn\' t added a biography yet.' %>
+                    </p>
+                    <div class="row g-4 mt-2">
+                        <div class="col-sm-6">
+                            <div class="p-3 border rounded">
+                                <h6 class="fw-bold mb-2">Teaching Style</h6>
+                                <p class="text-muted small mb-0">Interactive, project-based learning with a focus on
+                                    practical application and industry standards.</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="p-3 border rounded">
+                                <h6 class="fw-bold mb-2">Academic Background</h6>
+                                <p class="text-muted small mb-0">Ph.D. in Computer Science, 10+ years of experience in
+                                    higher education and curriculum development.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3">
+                    <h6 class="mb-0 fw-bold text-uppercase small text-primary">Academic Statistics</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center g-3">
+                        <div class="col-6 col-sm-3">
+                            <div class="h3 mb-0 fw-bold">
+                                <%= profile.total_assignments %>
+                            </div>
+                            <small class="text-muted text-uppercase smaller">Assignments</small>
+                        </div>
+                        <div class="col-6 col-sm-3">
+                            <div class="h3 mb-0 fw-bold">4.9/5</div>
+                            <small class="text-muted text-uppercase smaller">Avg Rating</small>
+                        </div>
+                        <div class="col-6 col-sm-3">
+                            <div class="h3 mb-0 fw-bold">96%</div>
+                            <small class="text-muted text-uppercase smaller">Pass Rate</small>
+                        </div>
+                        <div class="col-6 col-sm-3">
+                            <div class="h3 mb-0 fw-bold">KSh <%= profile.total_course_revenue ?
+                                    profile.total_course_revenue.toLocaleString() : '0' %>
+                            </div>
+                            <small class="text-muted text-uppercase smaller">Revenue</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .bg-soft-primary {
+            background-color: rgba(13, 110, 253, 0.1);
+        }
+
+        .bg-soft-success {
+            background-color: rgba(25, 135, 84, 0.1);
+        }
+
+        .smaller {
+            font-size: 0.7rem;
+        }
+    </style>

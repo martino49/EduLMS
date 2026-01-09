@@ -149,9 +149,9 @@
             <div class="col-md-8">
                 <h2 class="mb-2">Hey <%= user.firstName %>! 👋</h2>
                 <p class="mb-0 opacity-90">
-                    <% // Safe variable checking const courses=typeof enrolledCourses !=='undefined' ? enrolledCourses :
-                        []; const timeOfDay=new Date().getHours() < 12 ? 'morning' : (new Date().getHours() < 18
-                        ? 'afternoon' : 'evening' ); if (courses.length> 0) {
+                    <% const courses=typeof enrolledCourses !=='undefined' ? enrolledCourses : []; const timeOfDay=new
+                        Date().getHours() < 12 ? 'morning' : (new Date().getHours() < 18 ? 'afternoon' : 'evening' ); if
+                        (courses.length> 0) {
                         %>
                         Good <%= timeOfDay %>! You're doing great with <%= courses.length %> course<%= courses.length
                                     !==1 ? 's' : '' %> in progress. Ready to learn something new today?

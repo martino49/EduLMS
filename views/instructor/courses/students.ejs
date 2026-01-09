@@ -1,0 +1,99 @@
+<%- include('../../../layouts/instructor-layout', { title: title, pageTitle: pageTitle, currentPage: 'courses' ,
+    breadcrumbs: breadcrumbs, headerActions: [ { url: `/instructor/courses/${course.id}`, text: 'Course Overview' ,
+    icon: 'fas fa-eye' , class: 'btn-outline-primary' } ] }) %>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-white py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 text-primary fw-bold text-uppercase small">Class Registry: <%= course.title %>
+                </h5>
+                <span class="badge bg-soft-primary text-primary">
+                    <%= students.length %> Enrolled
+                </span>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">Student Name</th>
+                            <th>Student ID</th>
+                            <th>Email</th>
+                            <th>Enrolled Date</th>
+                            <th class="text-center">Performance</th>
+                            <th class="text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (students && students.length> 0) { %>
+                            <% students.forEach(student=> { %>
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="d-flex align-items-center">
+                                            <div
+                                                class="avatar-sm bg-soft-info text-info rounded-circle me-3 d-flex align-items-center justify-content-center">
+                                                <%= student.name.charAt(0) %>
+                                            </div>
+                                            <div class="fw-bold text-dark">
+                                                <%= student.name %>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><code><%= student.student_id %></code></td>
+                                    <td>
+                                        <%= student.email %>
+                                    </td>
+                                    <td>
+                                        <%= new Date(student.enrolled_at).toLocaleDateString() %>
+                                    </td>
+                                    <td class="text-center">
+                                        <% if (student.average_grade) { %>
+                                            <div class="progress" style="height: 6px; width: 100px; margin: 0 auto;">
+                                                <div class="progress-bar bg-success" role="progressbar"
+                                                    style="width: <%= (student.average_grade / 4) * 100 %>%;"></div>
+                                            </div>
+                                            <small class="text-muted">
+                                                <%= student.average_grade.toFixed(2) %> GPA
+                                            </small>
+                                            <% } else { %>
+                                                <small class="text-muted">No grades yet</small>
+                                                <% } %>
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        <button class="btn btn-sm btn-light border" title="View Profile">
+                                            <i class="fas fa-user"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <% }); %>
+                                    <% } else { %>
+                                        <tr>
+                                            <td colspan="6" class="text-center py-5 text-muted">
+                                                <i class="fas fa-user-slash d-block mb-2 fa-2x"></i>
+                                                No students enrolled in this course yet.
+                                            </td>
+                                        </tr>
+                                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .bg-soft-primary {
+            background-color: rgba(13, 110, 253, 0.1);
+        }
+
+        .bg-soft-info {
+            background-color: rgba(13, 202, 240, 0.1);
+        }
+
+        .avatar-sm {
+            width: 32px;
+            height: 32px;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+    </style>

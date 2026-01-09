@@ -306,3 +306,180 @@ exports.submitAssignment = async (req, res) => {
 exports.markNotificationAsRead = async (req, res) => {
   // Your existing markNotificationAsRead method...
 };
+
+exports.showAvailableCourses = async (req, res) => {
+  try {
+    const studentId = req.user.id;
+    const [courses] = await db.query(`
+      SELECT c.*, u.name as instructor_name
+      FROM courses c
+      JOIN users u ON c.teacher_id = u.id
+      WHERE c.status = 'active'
+      AND c.id NOT IN (SELECT course_id FROM enrollments WHERE student_id = ?)
+    `, [studentId]);
+
+    res.render('student/courses/enroll', {
+      title: 'Available Courses',
+      user: { ...req.user, initials: Helpers.generateInitials(req.user) },
+      courses,
+      currentPage: 'enroll'
+    });
+  } catch (error) {
+    console.error('Show available courses error:', error);
+    req.flash('error', 'Error loading available courses');
+    res.redirect('/student/dashboard');
+  }
+};
+
+exports.viewCourse = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const [course] = await db.query(`
+      SELECT c.*, u.name as instructor_name
+      FROM courses c
+      JOIN users u ON c.teacher_id = u.id
+      WHERE c.id = ?
+    `, [courseId]);
+
+    if (!course.length) {
+      req.flash('error', 'Course not found');
+      return res.redirect('/student/courses');
+    }
+
+    const [materials] = await db.query('SELECT * FROM course_materials WHERE course_id = ?', [courseId]);
+    const [assignments] = await db.query('SELECT * FROM assignments WHERE course_id = ? AND status = "published"', [courseId]);
+
+    res.render('student/courses/view', {
+      title: course[0].title,
+      user: { ...req.user, initials: Helpers.generateInitials(req.user) },
+      course: course[0],
+      materials,
+      assignments,
+      currentPage: 'courses'
+    });
+  } catch (error) {
+    console.error('View course error:', error);
+    req.flash('error', 'Error loading course details');
+    res.redirect('/student/courses');
+  }
+};
+
+exports.enrollInCourse = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const studentId = req.user.id;
+
+    // Implementation of enrollment logic (simplified for fix)
+    await db.query('INSERT INTO enrollments (student_id, course_id, status) VALUES (?, ?, ?)', [studentId, courseId, 'active']);
+
+    req.flash('success', 'Successfully enrolled in course');
+    res.redirect(`/student/courses/${courseId}`);
+  } catch (error) {
+    console.error('Enroll in course error:', error);
+    req.flash('error', 'Error enrolling in course');
+    res.redirect('/student/courses/enroll');
+  }
+};
+
+exports.viewAssignment = async (req, res) => {
+  try {
+    const { assignmentId } = req.params;
+    const studentId = req.user.id;
+
+    const [assignment] = await db.query(`
+      SELECT a.*, c.title as course_title, c.course_code
+      FROM assignments a
+      JOIN courses c ON a.course_id = c.id
+      WHERE a.id = ?
+    `, [assignmentId]);
+
+    if (!assignment.length) {
+      req.flash('error', 'Assignment not found');
+      return res.redirect('/student/assignments');
+    }
+
+    const [submission] = await db.query('SELECT * FROM submissions WHERE assignment_id = ? AND student_id = ?', [assignmentId, studentId]);
+
+    res.render('student/assignments/view', {
+      title: assignment[0].title,
+      user: { ...req.user, initials: Helpers.generateInitials(req.user) },
+      assignment: assignment[0],
+      submission: submission[0] || null,
+      currentPage: 'assignments'
+    });
+  } catch (error) {
+    console.error('View assignment error:', error);
+    req.flash('error', 'Error loading assignment details');
+    res.redirect('/student/assignments');
+  }
+};
+
+exports.getPayments = async (req, res) => {
+  try {
+    const studentId = req.user.id;
+    // Basic implementation for financials page
+    const [payments] = await db.query('SELECT * FROM payments WHERE student_id = ? ORDER BY payment_date DESC', [studentId]);
+
+    res.render('student/payments/history', {
+      title: 'Financials',
+      user: { ...req.user, initials: Helpers.generateInitials(req.user) },
+      payments,
+      currentPage: 'payments'
+    });
+  } catch (error) {
+    console.error('Get payments error:', error);
+    req.flash('error', 'Error loading payment history');
+    res.redirect('/student/dashboard');
+  }
+};
+
+exports.showMakePayment = async (req, res) => {
+  res.render('student/payments/make-payment', {
+    title: 'Make Payment',
+    user: { ...req.user, initials: Helpers.generateInitials(req.user) },
+    currentPage: 'payments'
+  });
+};
+
+exports.handlePayment = async (req, res) => {
+  // Logic for handling payment submissions
+  res.json({ message: 'Payment handling - Under construction' });
+};
+
+exports.viewProfile = async (req, res) => {
+  res.render('student/profile/view', {
+    title: 'My Profile',
+    user: { ...req.user, initials: Helpers.generateInitials(req.user) },
+    currentPage: 'profile'
+  });
+};
+
+exports.showEditProfile = async (req, res) => {
+  res.render('student/profile/edit', {
+    title: 'Edit Profile',
+    user: { ...req.user, initials: Helpers.generateInitials(req.user) },
+    currentPage: 'profile'
+  });
+};
+
+exports.updateProfile = async (req, res) => {
+  // Logic for updating profile
+};
+
+exports.getNotifications = async (req, res) => {
+  try {
+    const studentId = req.user.id;
+    const [notifications] = await db.query('SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC', [studentId]);
+
+    res.render('student/notifications/list', {
+      title: 'Notifications',
+      user: { ...req.user, initials: Helpers.generateInitials(req.user) },
+      notifications,
+      currentPage: 'notifications'
+    });
+  } catch (error) {
+    console.error('Get notifications error:', error);
+    req.flash('error', 'Error loading notifications');
+    res.redirect('/student/dashboard');
+  }
+};

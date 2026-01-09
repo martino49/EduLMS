@@ -1,412 +1,432 @@
-<% 
-    layout = 'layouts/admin-layout';
-    currentPage = 'dashboard';
-%>
+<% layout='layouts/instructor-layout' ; currentPage='dashboard' ; %>
 
-<style>
-    /* Stats Grid */
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 1.25rem;
-        margin-bottom: 2rem;
-    }
-    
-    .stat-card {
-        background: #fff;
-        border-radius: 8px;
-        padding: 1.5rem;
-        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
-        transition: transform 0.3s, box-shadow 0.3s;
-        border: none;
-        border-left: 4px solid var(--primary);
-    }
-    
-    .stat-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.2);
-    }
-    
-    .stat-card.students { border-left-color: var(--success); }
-    .stat-card.instructors { border-left-color: var(--info); }
-    .stat-card.revenue { border-left-color: var(--warning); }
-    .stat-card.courses { border-left-color: var(--primary); }
-    
-    .stat-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 0.75rem;
-    }
-    
-    .stat-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1rem;
-        color: white;
-    }
-    
-    .stat-card.students .stat-icon { background: var(--success); }
-    .stat-card.instructors .stat-icon { background: var(--info); }
-    .stat-card.revenue .stat-icon { background: var(--warning); }
-    .stat-card.courses .stat-icon { background: var(--primary); }
-    
-    .stat-value {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--dark);
-        margin-bottom: 0.2rem;
-    }
-    
-    .stat-label {
-        color: #6c757d;
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        font-weight: 600;
-    }
-    
-    .stat-change {
-        font-size: 0.75rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-        margin-top: 0.5rem;
-    }
-    
-    .stat-change.positive {
-        color: var(--success);
-    }
-    
-    /* Dashboard Cards */
-    .dashboard-card {
-        background: #fff;
-        border-radius: 8px;
-        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
-        transition: transform 0.3s, box-shadow 0.3s;
-        border: none;
-        margin-bottom: 1.5rem;
-    }
-    
-    .dashboard-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.2);
-    }
-    
-    .dashboard-card .card-header {
-        background: #fff;
-        border-bottom: 1px solid #e3e6f0;
-        padding: 1rem 1.5rem;
-        font-weight: 600;
-        color: var(--dark);
-        font-size: 0.9rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    
-    .dashboard-card .card-body {
-        padding: 1.5rem;
-    }
-    
-    /* Quick Actions */
-    .quick-actions-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-        gap: 0.75rem;
-    }
-    
-    .quick-action-card {
-        background: #fff;
-        border-radius: 8px;
-        padding: 1.5rem;
-        text-align: center;
-        text-decoration: none;
-        color: var(--dark);
-        transition: all 0.3s;
-        border: 1px solid #e3e6f0;
-        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
-    }
-    
-    .quick-action-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.2);
-        text-decoration: none;
-        color: var(--dark);
-    }
-    
-    .quick-action-card i {
-        font-size: 1.5rem;
-        margin-bottom: 0.5rem;
-        display: block;
-    }
-    
-    .quick-action-card:nth-child(1) i { color: var(--primary); }
-    .quick-action-card:nth-child(2) i { color: var(--success); }
-    .quick-action-card:nth-child(3) i { color: var(--warning); }
-    .quick-action-card:nth-child(4) i { color: var(--info); }
-    
-    .quick-action-card h6 {
-        font-size: 0.85rem;
-        margin-bottom: 0.25rem;
-        font-weight: 600;
-    }
-    
-    .quick-action-card p {
-        font-size: 0.7rem;
-        color: #6c757d;
-        margin: 0;
-    }
-    
-    /* Activity List */
-    .activity-list {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-    }
-    
-    .activity-item {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 0.75rem;
-        border-radius: 6px;
-        border: 1px solid #e3e6f0;
-        transition: all 0.3s ease;
-    }
-    
-    .activity-item:hover {
-        background: #f8f9fc;
-        border-color: var(--primary-light);
-    }
-    
-    .activity-icon {
-        width: 32px;
-        height: 32px;
-        border-radius: 6px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.9rem;
-        color: white;
-        flex-shrink: 0;
-    }
-    
-    .activity-icon.user { background: var(--primary); }
-    .activity-icon.payment { background: var(--success); }
-    .activity-icon.course { background: var(--warning); }
-    .activity-icon.system { background: var(--info); }
-    
-    .activity-content {
-        flex: 1;
-    }
-    
-    .activity-text {
-        color: var(--dark);
-        font-weight: 500;
-        margin-bottom: 0.2rem;
-        font-size: 0.85rem;
-    }
-    
-    .activity-time {
-        font-size: 0.75rem;
-        color: #6c757d;
-    }
-    
-    @media (max-width: 768px) {
+    <style>
+        /* Stats Grid */
         .stats-grid {
-            grid-template-columns: 1fr;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem;
         }
-        
+
+        .stat-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+            border-left: 4px solid var(--primary);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.2);
+        }
+
+        .stat-card.students {
+            border-left-color: var(--success);
+        }
+
+        .stat-card.instructors {
+            border-left-color: var(--info);
+        }
+
+        .stat-card.revenue {
+            border-left-color: var(--warning);
+        }
+
+        .stat-card.courses {
+            border-left-color: var(--primary);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .stat-card.students .stat-icon {
+            background: var(--success);
+        }
+
+        .stat-card.instructors .stat-icon {
+            background: var(--info);
+        }
+
+        .stat-card.revenue .stat-icon {
+            background: var(--warning);
+        }
+
+        .stat-card.courses .stat-icon {
+            background: var(--primary);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.2rem;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        .stat-change {
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            margin-top: 0.5rem;
+        }
+
+        .stat-change.positive {
+            color: var(--success);
+        }
+
+        /* Dashboard Cards */
+        .dashboard-card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.2);
+        }
+
+        .dashboard-card .card-header {
+            background: #fff;
+            border-bottom: 1px solid #e3e6f0;
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-card .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Quick Actions */
         .quick-actions-grid {
-            grid-template-columns: 1fr;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 0.75rem;
         }
-    }
-</style>
 
-<!-- Stats Grid -->
-<div class="stats-grid">
-    <div class="stat-card students">
-        <div class="stat-header">
-            <div>
-                <div class="stat-value">
-                    <% if (typeof stats !== 'undefined' && stats.totalStudents) { %>
-                        <%= stats.totalStudents.toLocaleString() %>
-                    <% } else { %>
-                        0
-                    <% } %>
+        .quick-action-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            text-decoration: none;
+            color: var(--dark);
+            transition: all 0.3s;
+            border: 1px solid #e3e6f0;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+        }
+
+        .quick-action-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.2);
+            text-decoration: none;
+            color: var(--dark);
+        }
+
+        .quick-action-card i {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .quick-action-card:nth-child(1) i {
+            color: var(--primary);
+        }
+
+        .quick-action-card:nth-child(2) i {
+            color: var(--success);
+        }
+
+        .quick-action-card:nth-child(3) i {
+            color: var(--warning);
+        }
+
+        .quick-action-card:nth-child(4) i {
+            color: var(--info);
+        }
+
+        .quick-action-card h6 {
+            font-size: 0.85rem;
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+        }
+
+        .quick-action-card p {
+            font-size: 0.7rem;
+            color: #6c757d;
+            margin: 0;
+        }
+
+        /* Activity List */
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 6px;
+            border: 1px solid #e3e6f0;
+            transition: all 0.3s ease;
+        }
+
+        .activity-item:hover {
+            background: #f8f9fc;
+            border-color: var(--primary-light);
+        }
+
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .activity-icon.user {
+            background: var(--primary);
+        }
+
+        .activity-icon.payment {
+            background: var(--success);
+        }
+
+        .activity-icon.course {
+            background: var(--warning);
+        }
+
+        .activity-icon.system {
+            background: var(--info);
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            color: var(--dark);
+            font-weight: 500;
+            margin-bottom: 0.2rem;
+            font-size: 0.85rem;
+        }
+
+        .activity-time {
+            font-size: 0.75rem;
+            color: #6c757d;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-actions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card courses">
+            <div class="stat-header">
+                <div>
+                    <div class="stat-value">
+                        <%= profile ? profile.total_courses : 0 %>
+                    </div>
+                    <div class="stat-label">Total Courses</div>
                 </div>
-                <div class="stat-label">Total Students</div>
+                <div class="stat-icon">
+                    <i class="fas fa-book"></i>
+                </div>
             </div>
-            <div class="stat-icon">
-                <i class="fas fa-user-graduate"></i>
+            <div class="stat-change positive">
+                <span class="text-muted">Manage your active courses</span>
             </div>
         </div>
-        <div class="stat-change positive">
-            <i class="fas fa-arrow-up"></i>
-            <span>+12% this month</span>
+
+        <div class="stat-card students">
+            <div class="stat-header">
+                <div>
+                    <div class="stat-value">
+                        <%= profile ? profile.total_students : 0 %>
+                    </div>
+                    <div class="stat-label">Active Students</div>
+                </div>
+                <div class="stat-icon">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+            </div>
+            <div class="stat-change positive">
+                <span class="text-muted">Students currently enrolled</span>
+            </div>
+        </div>
+
+        <div class="stat-card instructors">
+            <div class="stat-header">
+                <div>
+                    <div class="stat-value">
+                        <%= profile ? profile.total_assignments : 0 %>
+                    </div>
+                    <div class="stat-label">Total Assignments</div>
+                </div>
+                <div class="stat-icon">
+                    <i class="fas fa-tasks"></i>
+                </div>
+            </div>
+            <div class="stat-change positive">
+                <span class="text-muted">Across all courses</span>
+            </div>
+        </div>
+
+        <div class="stat-card revenue">
+            <div class="stat-header">
+                <div>
+                    <div class="stat-value">
+                        KSh <%= profile ? (profile.total_course_revenue || 0).toLocaleString() : 0 %>
+                    </div>
+                    <div class="stat-label">Course Revenue</div>
+                </div>
+                <div class="stat-icon">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+            </div>
+            <div class="stat-change positive">
+                <span class="text-muted">Total potential revenue</span>
+            </div>
         </div>
     </div>
 
-    <div class="stat-card instructors">
-        <div class="stat-header">
-            <div>
-                <div class="stat-value">
-                    <% if (typeof stats !== 'undefined' && stats.totalInstructors) { %>
-                        <%= stats.totalInstructors.toLocaleString() %>
-                    <% } else { %>
-                        0
-                    <% } %>
+    <!-- Quick Actions and Recent Activity -->
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Quick Actions -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-bolt me-2"></i>Quick Actions
+                    </h5>
                 </div>
-                <div class="stat-label">Active Instructors</div>
-            </div>
-            <div class="stat-icon">
-                <i class="fas fa-chalkboard-teacher"></i>
-            </div>
-        </div>
-        <div class="stat-change positive">
-            <i class="fas fa-arrow-up"></i>
-            <span>+5% this month</span>
-        </div>
-    </div>
-
-    <div class="stat-card revenue">
-        <div class="stat-header">
-            <div>
-                <div class="stat-value">
-                    KSh 
-                    <% if (typeof stats !== 'undefined' && stats.totalRevenue) { %>
-                        <%= stats.totalRevenue.toLocaleString() %>
-                    <% } else { %>
-                        0
-                    <% } %>
-                </div>
-                <div class="stat-label">Total Revenue</div>
-            </div>
-            <div class="stat-icon">
-                <i class="fas fa-money-bill-wave"></i>
-            </div>
-        </div>
-        <div class="stat-change positive">
-            <i class="fas fa-arrow-up"></i>
-            <span>+18% this month</span>
-        </div>
-    </div>
-
-    <div class="stat-card courses">
-        <div class="stat-header">
-            <div>
-                <div class="stat-value">
-                    <% if (typeof stats !== 'undefined' && stats.totalCourses) { %>
-                        <%= stats.totalCourses.toLocaleString() %>
-                    <% } else { %>
-                        0
-                    <% } %>
-                </div>
-                <div class="stat-label">Active Courses</div>
-            </div>
-            <div class="stat-icon">
-                <i class="fas fa-book"></i>
-            </div>
-        </div>
-        <div class="stat-change positive">
-            <i class="fas fa-arrow-up"></i>
-            <span>+8% this month</span>
-        </div>
-    </div>
-</div>
-
-<!-- Quick Actions and Recent Activity -->
-<div class="row">
-    <div class="col-lg-8">
-        <!-- Quick Actions -->
-        <div class="dashboard-card">
-            <div class="card-header">
-                <h5 class="card-title mb-0">
-                    <i class="fas fa-bolt me-2"></i>Quick Actions
-                </h5>
-            </div>
-            <div class="card-body">
-                <div class="quick-actions-grid">
-                    <a href="/admin/users/create" class="quick-action-card">
-                        <i class="fas fa-user-plus"></i>
-                        <h6>Add User</h6>
-                        <p>Create new user account</p>
-                    </a>
-                    <a href="/admin/courses/create" class="quick-action-card">
-                        <i class="fas fa-book"></i>
-                        <h6>Create Course</h6>
-                        <p>Add new course to catalog</p>
-                    </a>
-                    <a href="/admin/finance/fees/create" class="quick-action-card">
-                        <i class="fas fa-money-bill-wave"></i>
-                        <h6>Set Fee Structure</h6>
-                        <p>Configure payment plans</p>
-                    </a>
-                    <a href="/admin/system/notifications/create" class="quick-action-card">
-                        <i class="fas fa-bell"></i>
-                        <h6>Send Notification</h6>
-                        <p>Notify all users</p>
-                    </a>
+                <div class="card-body">
+                    <div class="quick-actions-grid">
+                        <a href="/instructor/courses/create" class="quick-action-card">
+                            <i class="fas fa-plus-circle"></i>
+                            <h6>Create Course</h6>
+                            <p>Launch a new unit</p>
+                        </a>
+                        <a href="/instructor/assignments/create" class="quick-action-card">
+                            <i class="fas fa-file-upload"></i>
+                            <h6>New Assignment</h6>
+                            <p>Upload course work</p>
+                        </a>
+                        <a href="/instructor/grades/manage" class="quick-action-card">
+                            <i class="fas fa-award"></i>
+                            <h6>Grade Entry</h6>
+                            <p>Record performance</p>
+                        </a>
+                        <a href="/instructor/notifications/create" class="quick-action-card">
+                            <i class="fas fa-paper-plane"></i>
+                            <h6>Broadcast</h6>
+                            <p>Alert your students</p>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-lg-4">
-        <!-- Recent Activity -->
-        <div class="dashboard-card">
-            <div class="card-header">
-                <h5 class="card-title mb-0">
-                    <i class="fas fa-history me-2"></i>Recent Activity
-                </h5>
-                <a href="/admin/system/notifications" class="btn btn-sm btn-outline-primary">View All</a>
-            </div>
-            <div class="card-body">
-                <div class="activity-list">
-                    <div class="activity-item">
-                        <div class="activity-icon user">
-                            <i class="fas fa-user-plus"></i>
+        <div class="col-lg-4">
+            <!-- Recent Activity -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-history me-2"></i>Recent Activity
+                    </h5>
+                    <a href="/admin/system/notifications" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-icon user">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-text">New student registration completed</div>
+                                <div class="activity-time">2 minutes ago</div>
+                            </div>
                         </div>
-                        <div class="activity-content">
-                            <div class="activity-text">New student registration completed</div>
-                            <div class="activity-time">2 minutes ago</div>
+                        <div class="activity-item">
+                            <div class="activity-icon payment">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-text">Payment processed successfully</div>
+                                <div class="activity-time">1 hour ago</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon course">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-text">New course material uploaded</div>
+                                <div class="activity-time">3 hours ago</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon system">
+                                <i class="fas fa-cog"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-text">System backup completed</div>
+                                <div class="activity-time">5 hours ago</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="activity-item">
-                        <div class="activity-icon payment">
-                            <i class="fas fa-money-bill-wave"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-text">Payment processed successfully</div>
-                            <div class="activity-time">1 hour ago</div>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon course">
-                            <i class="fas fa-book"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-text">New course material uploaded</div>
-                            <div class="activity-time">3 hours ago</div>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon system">
-                            <i class="fas fa-cog"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-text">System backup completed</div>
-                            <div class="activity-time">5 hours ago</div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>

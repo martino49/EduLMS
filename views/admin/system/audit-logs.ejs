@@ -1,0 +1,115 @@
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">System Audit Logs</h1>
+        <div class="header-actions">
+            <button class="btn btn-outline-danger me-2">
+                <i class="fas fa-trash-alt me-2"></i>Clear Logs
+            </button>
+            <button class="btn btn-outline-primary">
+                <i class="fas fa-download me-2"></i>Export Logs
+            </button>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h6 class="m-0 font-weight-bold text-primary">Recent Activities</h6>
+                </div>
+                <div class="col-auto">
+                    <div class="input-group input-group-sm" style="width: 250px;">
+                        <input type="text" class="form-control" placeholder="Search logs...">
+                        <button class="btn btn-primary" type="button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4">Timestamp</th>
+                            <th>User</th>
+                            <th>Action</th>
+                            <th>Module</th>
+                            <th>IP Address</th>
+                            <th class="pe-4">Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (auditLogs && auditLogs.length> 0) { %>
+                            <% auditLogs.forEach(log=> { %>
+                                <tr>
+                                    <td class="ps-4 small text-muted">
+                                        <%= new Date(log.created_at).toLocaleString() %>
+                                    </td>
+                                    <td>
+                                        <div class="fw-bold">
+                                            <%= log.user_name || 'System' %>
+                                        </div>
+                                        <div class="small text-muted">ID: <%= log.user_id || 'N/A' %>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge <%= 
+                                            log.action.includes('CREATE') ? 'bg-success' : 
+                                            log.action.includes('DELETE') ? 'bg-danger' : 
+                                            log.action.includes('UPDATE') ? 'bg-warning' : 
+                                            'bg-info' 
+                                        %> text-xs">
+                                            <%= log.action %>
+                                        </span>
+                                    </td>
+                                    <td><span class="text-uppercase small fw-bold">
+                                            <%= log.module %>
+                                        </span></td>
+                                    <td class="text-monospace small">
+                                        <%= log.ip_address || '127.0.0.1' %>
+                                    </td>
+                                    <td class="pe-4">
+                                        <button class="btn btn-sm btn-link text-decoration-none"
+                                            onclick="alert('<%= log.details.replace(/'/g, " \\'") %>')">
+                                            View Details
+                                        </button>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                                    <% } else { %>
+                                        <tr>
+                                            <td colspan="6" class="text-center py-5">
+                                                <div class="text-muted mb-2">
+                                                    <i class="fas fa-history fa-2x"></i>
+                                                </div>
+                                                <p class="mb-0">No audit logs available.</p>
+                                            </td>
+                                        </tr>
+                                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer bg-white border-0 py-3">
+            <nav aria-label="Audit log pagination">
+                <ul class="pagination pagination-sm m-0 justify-content-center">
+                    <li class="page-item disabled"><a class="page-item link" href="#">Previous</a></li>
+                    <li class="page-item active"><a class="page-item link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-item link" href="#">Next</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<style>
+    .text-xs {
+        font-size: 0.7rem;
+    }
+
+    .text-monospace {
+        font-family: 'Courier New', Courier, monospace;
+    }
+</style>
