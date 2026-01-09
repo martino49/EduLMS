@@ -39,7 +39,16 @@ class FileService {
   /**
    * Initialize required directories
    */
+  /**
+   * Initialize required directories
+   */
   initializeDirectories() {
+    // Skip directory creation on Vercel to prevent ENOENT/EROFS errors
+    if (process.env.VERCEL) {
+      console.log('ℹ️ Running on Vercel: Skipping local directory creation.');
+      return;
+    }
+
     const directories = [
       this.uploadDir,
       this.tempDir,
@@ -52,8 +61,12 @@ class FileService {
     ];
 
     directories.forEach(dir => {
-      if (!fsSync.existsSync(dir)) {
-        fsSync.mkdirSync(dir, { recursive: true });
+      try {
+        if (!fsSync.existsSync(dir)) {
+          fsSync.mkdirSync(dir, { recursive: true });
+        }
+      } catch (error) {
+        console.warn(`⚠️ Failed to create directory ${dir}: ${error.message}`);
       }
     });
   }
@@ -72,12 +85,12 @@ class FileService {
     const storage = multer.diskStorage({
       destination: (req, file, cb) => {
         const uploadPath = path.join(this.uploadDir, destination);
-        
+
         // Ensure directory exists
         if (!fsSync.existsSync(uploadPath)) {
           fsSync.mkdirSync(uploadPath, { recursive: true });
         }
-        
+
         cb(null, uploadPath);
       },
       filename: (req, file, cb) => {
@@ -88,7 +101,7 @@ class FileService {
 
     const fileFilter = (req, file, cb) => {
       const allowedMimes = this.getAllowedMimeTypes(allowedTypes);
-      
+
       if (allowedMimes.includes(file.mimetype)) {
         cb(null, true);
       } else {
@@ -446,11 +459,11 @@ class FileService {
       let deletedCount = 0;
 
       const files = await fs.readdir(this.tempDir);
-      
+
       for (const file of files) {
         const filePath = path.join(this.tempDir, file);
         const stats = await fs.stat(filePath);
-        
+
         if (stats.mtime.getTime() < cutoffTime) {
           await fs.unlink(filePath);
           deletedCount++;
@@ -617,7 +630,7 @@ class FileService {
   async logFileUpload(fileInfo) {
     try {
       const db = require('../../config/database');
-      
+
       await db.query(
         `INSERT INTO file_uploads 
          (original_name, file_name, file_path, file_size, file_type, mime_type, uploaded_at) 
@@ -640,7 +653,7 @@ class FileService {
   async logFileDeletion(filePath) {
     try {
       const db = require('../../config/database');
-      
+
       await db.query(
         'UPDATE file_uploads SET deleted_at = NOW() WHERE file_path = ?',
         [filePath]
@@ -658,9 +671,9 @@ class FileService {
     const expires = Date.now() + (expiresInMinutes * 60 * 1000);
     const data = `${filePath}|${expires}`;
     const token = crypto.createHmac('sha256', process.env.FILE_DOWNLOAD_SECRET || 'default-secret')
-                       .update(data)
-                       .digest('hex');
-    
+      .update(data)
+      .digest('hex');
+
     return `/api/files/download?file=${encodeURIComponent(filePath)}&expires=${expires}&token=${token}`;
   }
 
@@ -671,9 +684,9 @@ class FileService {
     const crypto = require('crypto');
     const data = `${filePath}|${expires}`;
     const expectedToken = crypto.createHmac('sha256', process.env.FILE_DOWNLOAD_SECRET || 'default-secret')
-                               .update(data)
-                               .digest('hex');
-    
+      .update(data)
+      .digest('hex');
+
     return token === expectedToken && Date.now() < parseInt(expires);
   }
 
